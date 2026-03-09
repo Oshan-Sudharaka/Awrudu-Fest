@@ -13,7 +13,9 @@ const MONGO_URI  = process.env.MONGO_URI  || 'mongodb://localhost:27017/awrudufe
 
 app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
 app.use(express.json({ limit: '4mb' }));
+// Serve static files from root OR public folder (works both ways)
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
 const limiter       = rateLimit({ windowMs:15*60*1000, max:300, message:{error:'Too many requests'} });
 const strictLimiter = rateLimit({ windowMs:15*60*1000, max:20 });
@@ -306,9 +308,15 @@ app.delete('/api/admin/reset',authAdmin,requireRole('super'),async(req,res)=>{
   catch(e){res.status(500).json({error:e.message});}
 });
 
+const fs = require('fs');
 app.get('*',(req,res)=>{
   if(req.path.startsWith('/api/'))return res.status(404).json({error:'Not found'});
-  res.sendFile(path.join(__dirname,'public','index.html'));
+  // Support both /public/index.html and root /index.html
+  const pubPath  = path.join(__dirname,'public','index.html');
+  const rootPath = path.join(__dirname,'index.html');
+  if(fs.existsSync(pubPath)) res.sendFile(pubPath);
+  else if(fs.existsSync(rootPath)) res.sendFile(rootPath);
+  else res.status(404).send('index.html not found');
 });
 
 async function start(){
