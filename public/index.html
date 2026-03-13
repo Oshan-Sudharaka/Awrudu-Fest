@@ -7,6 +7,8 @@
 <meta property="og:title" content="🎊 Awrudu with Feature Designz">
 <meta property="og:description" content="සිංහල අවුරුදු ජනක්‍රීඩා online! Play කනා මුට්ටිය, කොට්ට පොර & more!">
 <meta name="theme-color" content="#D4A017">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icon-512.svg">
 <title>Awrudu with Feature Designz 🎊</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Sinhala:wght@300;400;600;700;900&family=Yatra+One&family=Gemunu+Libre:wght@300;400;700;800&display=swap" rel="stylesheet">
 <style>
@@ -313,6 +315,13 @@ nav.solid{
 .tb-tag  {background:radial-gradient(ellipse at 30% 30%,#003a20,#001208);}
 .tb-kotta{background:radial-gradient(ellipse at 30% 30%,#20003a,#080012);}
 .tb-soon {background:radial-gradient(ellipse at 30% 30%,#2a2000,#080500);}
+.tb-kiriko{background:radial-gradient(ellipse at 30% 30%,#3a1a00,#120500);}
+.tb-kanamut{background:radial-gradient(ellipse at 30% 30%,#003a10,#001005);}
+.tb-pancha{background:radial-gradient(ellipse at 30% 30%,#00103a,#000512);}
+.tb-rahas{background:radial-gradient(ellipse at 30% 30%,#2a003a,#0a0012);}
+.tb-snake{background:radial-gradient(ellipse at 30% 30%,#003a00,#001200);}
+.gcard-soon{opacity:.6;pointer-events:none;}
+.gcard-soon .gcard-btn{cursor:default!important;}
 .gcard-badge{
   position:absolute;top:14px;left:14px;z-index:2;
   font-family:'Gemunu Libre',cursive;font-size:.58rem;letter-spacing:2px;
@@ -1003,18 +1012,87 @@ footer{
       </div>
     </div>
 
-    <div class="gcard" style="opacity:.65">
-      <div class="gcard-img tb-soon">
-        <span class="gcard-icon" style="animation-delay:1.5s;filter:grayscale(.5)">🎯</span>
-        <span class="gcard-badge badge-soon">COMING SOON</span>
+    <div class="gcard">
+      <div class="gcard-img tb-kiriko">
+        <span class="gcard-icon" style="animation-delay:1.5s">🪢</span>
+        <span class="gcard-badge badge-new">NEW ✨</span>
+        <span class="gcard-plays" id="plays-kiriko">-- plays</span>
       </div>
       <div class="gcard-body">
-        <span class="gcard-tag">TIMING GAME</span>
-        <h3 class="gcard-title">ළිඳ් ඇදීම</h3>
-        <p class="gcard-desc">Traditional rope pulling game — multiplayer timing challenge. Coming very soon!</p>
+        <span class="gcard-tag">TUG OF WAR</span>
+        <h3 class="gcard-title">කිරිකෝ ඇදීම</h3>
+        <p class="gcard-desc">AI කණ්ඩායමට එරෙහිව ශක්තිමත් ලෙස ඇදීම! ඉක්මනින් tap කර 3 වටයෙන් ජය ගන්න!</p>
         <div class="gcard-foot">
-          <span class="gcard-meta">👥 Multiplayer</span>
-          <button class="gcard-btn" disabled>Coming Soon</button>
+          <span class="gcard-meta">👤 1 vs AI · Fast Tap</span>
+          <button class="gcard-btn" onclick="launchGame('kiriko')">ෙකළිය ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard">
+      <div class="gcard-img tb-kanamut">
+        <span class="gcard-icon" style="animation-delay:2s">🎯</span>
+        <span class="gcard-badge badge-new">NEW ✨</span>
+        <span class="gcard-plays" id="plays-kanamut">-- plays</span>
+      </div>
+      <div class="gcard-body">
+        <span class="gcard-tag">POT BREAKING</span>
+        <h3 class="gcard-title">කණමුට්ටි ගැසීම</h3>
+        <p class="gcard-desc">ඇස් බැඳ ගෙස්ම! ගමන් කරන pendulum ළඟ click කර කාමර කඩාගන්න. 60s challenge!</p>
+        <div class="gcard-foot">
+          <span class="gcard-meta">👤 1 Player · Aim</span>
+          <button class="gcard-btn" onclick="launchGame('kanamut')">ෙකළිය ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard">
+      <div class="gcard-img tb-pancha">
+        <span class="gcard-icon" style="animation-delay:0.5s">🪁</span>
+        <span class="gcard-badge badge-new">NEW ✨</span>
+        <span class="gcard-plays" id="plays-pancha">-- plays</span>
+      </div>
+      <div class="gcard-body">
+        <span class="gcard-tag">SLINGSHOT</span>
+        <h3 class="gcard-title">පංච කෙළිය</h3>
+        <p class="gcard-desc">Slingshot drag & release! ගමන් කරන ඉලක්ක hit කරන්න. Streak bonus & 3 rounds!</p>
+        <div class="gcard-foot">
+          <span class="gcard-meta">👤 1 Player · Skill</span>
+          <button class="gcard-btn" onclick="launchGame('pancha')">ෙකළිය ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard">
+      <div class="gcard-img tb-rahas">
+        <span class="gcard-icon" style="animation-delay:1s">🧗</span>
+        <span class="gcard-badge badge-new">NEW ✨</span>
+        <span class="gcard-plays" id="plays-rahas">-- plays</span>
+      </div>
+      <div class="gcard-body">
+        <span class="gcard-tag">TREASURE HUNT</span>
+        <h3 class="gcard-title">රහස් දඩයම</h3>
+        <p class="gcard-desc">ඉඟිය කියවා සැඟවුණු ධජය සොයා ගන්න! 90s ඇතුළත ධජ 5ක් hunt කරන්න 🏳️</p>
+        <div class="gcard-foot">
+          <span class="gcard-meta">👤 1 Player · Puzzle</span>
+          <button class="gcard-btn" onclick="launchGame('rahas')">ෙකළිය ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard">
+      <div class="gcard-img tb-snake">
+        <span class="gcard-icon" style="animation-delay:0.8s">🐍</span>
+        <span class="gcard-badge badge-hot">HOT 🔥</span>
+        <span class="gcard-plays" id="plays-snake">-- plays</span>
+      </div>
+      <div class="gcard-body">
+        <span class="gcard-tag">BOARD GAME</span>
+        <h3 class="gcard-title">සර්ප හා ඉණිමං</h3>
+        <p class="gcard-desc">සිංහල Snakes & Ladders! AI එක්ක dice ගසා board race කරන්න. සාම්ප්‍රදායික design! 🎲</p>
+        <div class="gcard-foot">
+          <span class="gcard-meta">👤 1 vs AI · Board</span>
+          <button class="gcard-btn" onclick="launchGame('snake')">ෙකළිය ▶</button>
         </div>
       </div>
     </div>
@@ -1093,7 +1171,7 @@ footer{
     <div class="ccard">
       <span class="ccard-ico">📧</span>
       <div class="ccard-label">EMAIL</div>
-      <div class="ccard-val"><a class="contact-email" href="/cdn-cgi/l/email-protection#8ae3e4ece5caecefebfefff8efeeeff9e3ede4f0a4e6e1"><span class="__cf_email__" data-cfemail="0f666169604f696a6e7b7a7d6a6b6a7c66686175216364">[email&#160;protected]</span></a></div>
+      <div class="ccard-val"><a class="contact-email" href="/cdn-cgi/l/email-protection#2a43444c456a4c4f4b5e5f584f4e4f59434d4450044641"><span class="__cf_email__" data-cfemail="e28b8c848da2848783969790878687918b858c98cc8e89">[email&#160;protected]</span></a></div>
     </div>
     <div class="ccard">
       <span class="ccard-ico">📞</span>
@@ -1305,18 +1383,90 @@ function switchLB(filter,btn){
 }
 loadLB();
 
-/* Load play counts */
+/* Load play counts + dynamic games from API */
+let liveGamesData = null;
+
+async function loadGamesFromAPI(){
+  try{
+    const res = await fetch('/api/games');
+    if(res.ok){
+      const games = await res.json();
+      liveGamesData = games;
+      renderGamesGrid(games);
+      // Update GAMES map dynamically
+      games.forEach(g=>{
+        if(g.gameId && g.file){
+          GAMES[g.gameId]={file:g.file, title:`${g.icon||'🎮'} ${g.name}`};
+        }
+      });
+    }
+  }catch(e){}
+}
+
+function renderGamesGrid(games){
+  const grid = document.getElementById('gamesGrid');
+  if(!grid) return;
+
+  // Filter: only active or soon
+  const visible = games.filter(g => g.status !== 'hidden');
+
+  // Background color map per type
+  const bgMap = {
+    'SHELL GAME':   'tb-shell',
+    'ACTION TAG':   'tb-tag',
+    'TURN BASED':   'tb-kotta',
+    'TUG OF WAR':   'tb-kiriko',
+    'POT BREAKING': 'tb-kanamut',
+    'SLINGSHOT':    'tb-pancha',
+    'TREASURE HUNT':'tb-rahas',
+    'BOARD GAME':   'tb-snake',
+  };
+
+  grid.innerHTML = visible.map((g,i) => {
+    const bgClass = bgMap[g.type] || 'tb-soon';
+    const isSoon  = g.status === 'soon';
+    const badgeHtml = g.badge
+      ? `<span class="gcard-badge ${g.badge==='HOT'?'badge-hot':'badge-new'}">${g.badge==='HOT'?'HOT 🔥':'NEW ✨'}</span>`
+      : '';
+    return `
+    <div class="gcard${isSoon?' gcard-soon':''}">
+      <div class="gcard-img ${bgClass}" style="animation-delay:${i*0.15}s">
+        <span class="gcard-icon" style="animation-delay:${i*0.3}s">${g.icon||'🎮'}</span>
+        ${badgeHtml}
+        <span class="gcard-plays" id="plays-${g.gameId}">-- plays</span>
+      </div>
+      <div class="gcard-body">
+        <span class="gcard-tag">${g.type||'GAME'}</span>
+        <h3 class="gcard-title">${g.name}</h3>
+        <p class="gcard-desc">${g.desc||''}</p>
+        <div class="gcard-foot">
+          <span class="gcard-meta">👤 ${g.players||'1 Player'}</span>
+          ${isSoon
+            ? `<button class="gcard-btn" disabled style="opacity:.4">Coming Soon</button>`
+            : `<button class="gcard-btn" onclick="launchGame('${g.gameId}')">ෙකළිය ▶</button>`
+          }
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 async function loadPlayCounts(){
   try{
     const res=await fetch('/api/stats');
     if(res.ok){
       const d=await res.json();
-      if(d.shell) document.getElementById('plays-shell').textContent=d.shell.toLocaleString()+' plays';
-      if(d.tag)   document.getElementById('plays-tag').textContent=d.tag.toLocaleString()+' plays';
-      if(d.kotta) document.getElementById('plays-kotta').textContent=d.kotta.toLocaleString()+' plays';
+      Object.entries(d).forEach(([key,val])=>{
+        const el=document.getElementById('plays-'+key);
+        if(el) el.textContent=val.toLocaleString()+' plays';
+      });
     }
   }catch(e){}
 }
+
+// Load games first, then play counts
+loadGamesFromAPI().then(()=>loadPlayCounts());
+// Also load play counts separately for static cards
 loadPlayCounts();
 
 /* Load ticker from API */
@@ -1340,6 +1490,11 @@ const GAMES={
   shell: {file:'kana-muttiya.html',title:'🏺 කනා මුට්ටිය'},
   tag:   {file:'kana-muttiya-tag.html',title:'🙈 Blind Tag'},
   kotta: {file:'kotta-pora.html',title:'🛏️ කොට්ට පොර'},
+  kiriko:{file:'kiri-ko-adeema.html',title:'🪢 කිරිකෝ ඇදීම'},
+  kanamut:{file:'kana-muttiya-gasima.html',title:'🎯 කණමුට්ටි ගැසීම'},
+  pancha:{file:'pancha-keliya.html',title:'🪁 පංච කෙළිය'},
+  rahas: {file:'rahas-dadayama.html',title:'🧗 රහස් දඩයම'},
+  snake: {file:'sarpa-inimang.html',title:'🐍 සර්ප හා ඉණිමං'},
 };
 function launchGame(type){
   if(!GAMES[type]){showToast('🔜 Coming soon!');return;}
