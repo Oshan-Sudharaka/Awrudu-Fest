@@ -369,23 +369,37 @@ input[type="color"]{width:36px;height:36px;border:none;border-radius:8px;padding
         <span class="sec-title">🎮 Games Management</span>
         <button class="add-btn" onclick="openGameModal()">+ Add Game</button>
       </div>
-      <div class="tbl-wrap">
-        <table class="tbl">
-          <thead><tr><th>Icon</th><th>Name</th><th>Type</th><th>File</th><th>Status</th><th>Plays</th><th>Actions</th></tr></thead>
-          <tbody id="gamesTbl"></tbody>
-        </table>
+
+      <!-- Quick stats -->
+      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+        <div style="background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.2);border-radius:10px;padding:10px 18px;flex:1;min-width:90px;text-align:center">
+          <div style="font-size:1.5rem;font-family:'Yatra One',cursive;color:var(--gold-lt)" id="stat-active">0</div>
+          <div style="font-size:.7rem;color:rgba(253,243,220,.4);letter-spacing:1px">ACTIVE</div>
+        </div>
+        <div style="background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.2);border-radius:10px;padding:10px 18px;flex:1;min-width:90px;text-align:center">
+          <div style="font-size:1.5rem;font-family:'Yatra One',cursive;color:var(--gold-lt)" id="stat-hidden">0</div>
+          <div style="font-size:.7rem;color:rgba(253,243,220,.4);letter-spacing:1px">HIDDEN</div>
+        </div>
+        <div style="background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.2);border-radius:10px;padding:10px 18px;flex:1;min-width:90px;text-align:center">
+          <div style="font-size:1.5rem;font-family:'Yatra One',cursive;color:var(--gold-lt)" id="stat-plays">0</div>
+          <div style="font-size:.7rem;color:rgba(253,243,220,.4);letter-spacing:1px">TOTAL PLAYS</div>
+        </div>
       </div>
 
-      <!-- Add/Edit Game Form (hidden) -->
+      <!-- Game Cards Grid -->
+      <div id="gameCardsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;margin-bottom:24px"></div>
+
+      <!-- Add/Edit Game Form -->
       <div class="card" id="gameForm" style="display:none">
         <div class="card-title" id="gameFormTitle">➕ Add New Game</div>
         <div class="form-grid">
           <div class="f-group"><label class="f-label">GAME NAME (Sinhala)</label><input class="f-input" id="gf-name" placeholder="e.g. කනා මුට්ටිය"></div>
-          <div class="f-group"><label class="f-label">GAME TYPE</label><input class="f-input" id="gf-type" placeholder="e.g. SHELL GAME"></div>
-          <div class="f-group"><label class="f-label">ICON (emoji)</label><input class="f-input" id="gf-icon" placeholder="e.g. 🏺"></div>
+          <div class="f-group"><label class="f-label">GAME TYPE / SUBTITLE</label><input class="f-input" id="gf-type" placeholder="e.g. SHELL GAME"></div>
+          <div class="f-group"><label class="f-label">ICON (emoji)</label><input class="f-input" id="gf-icon" placeholder="e.g. 🏺" style="font-size:1.4rem"></div>
           <div class="f-group"><label class="f-label">HTML FILE</label><input class="f-input" id="gf-file" placeholder="e.g. kana-muttiya.html"></div>
+          <div class="f-group"><label class="f-label">PLAYERS INFO</label><input class="f-input" id="gf-players" placeholder="e.g. 1 vs AI · Action"></div>
           <div class="f-group"><label class="f-label">STATUS</label>
-            <select class="f-select" id="gf-status"><option value="active">Active</option><option value="hidden">Hidden</option><option value="soon">Coming Soon</option></select>
+            <select class="f-select" id="gf-status"><option value="active">🟢 Active</option><option value="hidden">🔴 Hidden</option><option value="soon">🟡 Coming Soon</option></select>
           </div>
           <div class="f-group"><label class="f-label">BADGE</label>
             <select class="f-select" id="gf-badge"><option value="">None</option><option value="HOT">HOT 🔥</option><option value="NEW">NEW ✨</option><option value="COMING SOON">COMING SOON</option></select>
@@ -397,6 +411,21 @@ input[type="color"]{width:36px;height:36px;border:none;border-radius:8px;padding
         <div class="form-actions">
           <button class="save-btn" onclick="saveGame()">💾 Save Game</button>
           <button class="cancel-btn" onclick="document.getElementById('gameForm').style.display='none'">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Inline name/customize edit modal -->
+      <div id="nameEditModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);align-items:center;justify-content:center">
+        <div style="background:#1a0d00;border:2px solid var(--gold);border-radius:16px;padding:28px 26px;width:min(460px,92vw);box-shadow:0 0 40px rgba(212,160,23,.2)">
+          <div style="font-family:'Yatra One',cursive;color:var(--gold-lt);font-size:1.15rem;margin-bottom:20px">✏️ Game Customize</div>
+          <div class="f-group" style="margin-bottom:12px"><label class="f-label">GAME NAME</label><input class="f-input" id="nem-name" placeholder="Game name"></div>
+          <div class="f-group" style="margin-bottom:12px"><label class="f-label">ICON EMOJI</label><input class="f-input" id="nem-icon" placeholder="🎮" style="font-size:1.6rem"></div>
+          <div class="f-group" style="margin-bottom:12px"><label class="f-label">TYPE / SUBTITLE</label><input class="f-input" id="nem-type" placeholder="e.g. BOARD GAME"></div>
+          <div class="f-group" style="margin-bottom:20px"><label class="f-label">DESCRIPTION</label><textarea class="f-textarea" id="nem-desc" rows="2" style="resize:vertical"></textarea></div>
+          <div style="display:flex;gap:10px">
+            <button class="save-btn" style="flex:1" onclick="saveNameEdit()">💾 Save Changes</button>
+            <button class="cancel-btn" onclick="closeNameEdit()">Cancel</button>
+          </div>
         </div>
       </div>
     </div>
@@ -836,35 +865,142 @@ async function loadDashboard(){
 
 /* ════════════ GAMES ════════════ */
 const defaultGames=[
-  {id:'shell',name:'කනා මුට්ටිය',type:'SHELL GAME',icon:'🏺',file:'kana-muttiya.html',status:'active',badge:'HOT',plays:8420},
-  {id:'tag',  name:'Blind Tag',   type:'ACTION TAG',icon:'🙈',file:'kana-muttiya-tag.html',status:'active',badge:'NEW',plays:7340},
-  {id:'kotta',name:'කොට්ට පොර', type:'TURN BASED',icon:'🛏️',file:'kotta-pora.html',status:'active',badge:'NEW',plays:6124},
-  {id:'lind', name:'ළිඳ් ඇදීම', type:'TIMING GAME',icon:'🎯',file:'',status:'soon',badge:'COMING SOON',plays:0},
+  {id:'shell', name:'කනා මුට්ටිය',  type:'SHELL GAME',  icon:'🏺', file:'kana-muttiya.html',        status:'active', badge:'HOT', desc:'Pot shuffle game! Ball සඟවලා — නිවැරදි pot තෝරා ලකුණු ගන්න.',          plays:8420, players:'1 Player · Casual'},
+  {id:'tag',   name:'Blind Tag',     type:'ACTION TAG',  icon:'🙈', file:'kana-muttiya-tag.html',    status:'active', badge:'NEW', desc:'Blindfolded character ගෙන AI runners catch කරන්න!',                  plays:7340, players:'1 vs AI · Action'},
+  {id:'kotta', name:'කොට්ට පොර',   type:'TURN BASED',  icon:'🛏️', file:'kotta-pora.html',          status:'active', badge:'NEW', desc:'AI ව කොට්ටෙන් Turn-by-turn combat! Special moves, best of 3.',       plays:6124, players:'1 vs AI · Fighting'},
+  {id:'kiriko',name:'කිරිකෝ ඇදීම', type:'TUG OF WAR',  icon:'🪢', file:'kiri-ko-adeema.html',      status:'active', badge:'NEW', desc:'AI කණ්ඩායමට එරෙහිව ශක්තිමත් ලෙස ඇදීම! 3 වටයෙන් ජය ගන්න.',         plays:0,    players:'1 vs AI · Fast Tap'},
+  {id:'kanamut',name:'කණමුට්ටි ගැසීම',type:'POT BREAKING',icon:'🎯',file:'kana-muttiya-gasima.html',status:'active', badge:'NEW', desc:'ඇස් බැඳ pendulum ළඟ click කර කාමර කඩාගන්න. 60s challenge!',         plays:0,    players:'1 Player · Aim'},
+  {id:'pancha',name:'පංච කෙළිය',   type:'SLINGSHOT',   icon:'🪁', file:'pancha-keliya.html',       status:'active', badge:'NEW', desc:'Slingshot drag & release! ගමන් කරන ඉලක්ක hit කරන්න. Streak bonus!', plays:0,    players:'1 Player · Skill'},
+  {id:'rahas', name:'රහස් දඩයම',   type:'TREASURE HUNT',icon:'🧗', file:'rahas-dadayama.html',     status:'active', badge:'NEW', desc:'ඉඟිය කියවා සැඟවුණු ධජය සොයා ගන්න! 90s ඇතුළත ධජ 5ක්.',              plays:0,    players:'1 Player · Puzzle'},
+  {id:'snake', name:'සර්ප හා ඉණිමං',type:'BOARD GAME',  icon:'🐍', file:'sarpa-inimang.html',      status:'active', badge:'HOT', desc:'සිංහල Snakes & Ladders! AI එක්ක dice ගසා board race කරන්න.',         plays:0,    players:'1 vs AI · Board'},
 ];
 let gamesData=[...defaultGames];
 let editGameId=null;
 
 async function loadGames(){
-  try{const d=await API('/games');if(d.length)gamesData=d;}catch(e){}
+  try{const d=await API('/admin/games');if(d.length)gamesData=d;}catch(e){}
   renderGames();
 }
 function renderGames(){
-  const bMap={active:'badge-active',hidden:'badge-hidden',soon:'badge-soon'};
-  document.getElementById('gamesTbl').innerHTML=gamesData.map(g=>`
-    <tr>
-      <td style="font-size:1.4rem">${g.icon}</td>
-      <td style="font-family:'Yatra One',cursive;color:var(--gold-lt)">${g.name}</td>
-      <td><span class="tbl-badge" style="background:rgba(212,160,23,.1);color:var(--gold);border:1px solid rgba(212,160,23,.2)">${g.type}</span></td>
-      <td style="font-size:.75rem;font-family:monospace;color:rgba(253,243,220,.4)">${g.file||'(not set)'}</td>
-      <td><span class="tbl-badge ${bMap[g.status]||''}">${g.status}</span></td>
-      <td style="font-family:'Yatra One',cursive;color:var(--gold)">${(g.plays||0).toLocaleString()}</td>
-      <td><div class="tbl-action">
-        <button class="ta edit" onclick="editGame('${g.id}')">Edit</button>
-        <button class="ta tog" onclick="toggleGame('${g.id}')">${g.status==='active'?'Hide':'Show'}</button>
-        <button class="ta del" onclick="deleteGame('${g.id}')">Del</button>
-      </div></td>
-    </tr>`).join('');
+  // Stats
+  const active=gamesData.filter(g=>g.status==='active').length;
+  const hidden=gamesData.filter(g=>g.status==='hidden').length;
+  const totalPlays=gamesData.reduce((s,g)=>s+(g.plays||0),0);
+  document.getElementById('stat-active').textContent=active;
+  document.getElementById('stat-hidden').textContent=hidden;
+  document.getElementById('stat-plays').textContent=totalPlays>=1000?(totalPlays/1000).toFixed(1)+'k':totalPlays;
+
+  // Card grid
+  const grid=document.getElementById('gameCardsGrid');
+  if(!grid)return;
+  grid.innerHTML=gamesData.map(g=>{
+    const isActive=g.status==='active';
+    const isSoon=g.status==='soon';
+    const statusColor=isActive?'#4CAF50':isSoon?'#FFC107':'#F44336';
+    const statusLabel=isActive?'LIVE':'HIDDEN';
+    return `<div style="
+      background:${isActive?'rgba(30,20,5,.95)':'rgba(15,10,5,.85)'};
+      border:1.5px solid ${isActive?'rgba(212,160,23,.35)':'rgba(255,255,255,.08)'};
+      border-radius:14px;padding:16px;
+      transition:all .25s;
+      opacity:${isActive?'1':'.72'};
+      position:relative;overflow:hidden;
+    ">
+      <!-- Status bar top -->
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${statusColor};border-radius:14px 14px 0 0;opacity:${isActive?.9:.4}"></div>
+
+      <!-- Header row -->
+      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px">
+        <div style="font-size:2.2rem;line-height:1;filter:${isActive?'none':'grayscale(0.6)'}">${g.icon||'🎮'}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-family:'Yatra One',cursive;color:var(--gold-lt);font-size:.95rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${g.name}</div>
+          <div style="font-size:.65rem;letter-spacing:1.5px;color:rgba(253,243,220,.4)">${g.type||''}</div>
+        </div>
+        <!-- ON/OFF Toggle -->
+        <label style="position:relative;width:46px;height:24px;flex-shrink:0;cursor:pointer" title="${isActive?'Click to hide':'Click to show'}">
+          <input type="checkbox" ${isActive?'checked':''} ${isSoon?'disabled':''} onchange="quickToggle('${g.id}',this.checked)"
+            style="opacity:0;width:0;height:0;position:absolute">
+          <span style="
+            position:absolute;inset:0;border-radius:24px;
+            background:${isActive?'linear-gradient(135deg,#4CAF50,#2E7D32)':'rgba(255,255,255,.12)'};
+            transition:all .25s;
+            box-shadow:${isActive?'0 0 10px rgba(76,175,80,.4)':'none'};
+          "></span>
+          <span style="
+            position:absolute;top:3px;left:${isActive?'25':'3'}px;
+            width:18px;height:18px;border-radius:50%;
+            background:#fff;transition:left .25s;
+            box-shadow:0 1px 4px rgba(0,0,0,.4);
+          "></span>
+        </label>
+      </div>
+
+      <!-- Description -->
+      <div style="font-size:.75rem;color:rgba(253,243,220,.45);line-height:1.5;margin-bottom:12px;min-height:34px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${g.desc||'No description.'}</div>
+
+      <!-- Meta row -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        ${g.badge?`<span style="background:${g.badge==='HOT'?'rgba(212,60,23,.25)':'rgba(30,120,30,.2)'};color:${g.badge==='HOT'?'#FF8A65':'#81C784'};border:1px solid ${g.badge==='HOT'?'rgba(212,60,23,.4)':'rgba(30,120,30,.4)'};padding:2px 8px;border-radius:20px;font-size:.65rem;letter-spacing:1px">${g.badge==='HOT'?'HOT 🔥':'NEW ✨'}</span>`:''}
+        <span style="background:rgba(212,160,23,.08);color:rgba(253,243,220,.4);padding:2px 8px;border-radius:20px;font-size:.65rem;border:1px solid rgba(212,160,23,.15)">${g.players||'1 Player'}</span>
+        <span style="margin-left:auto;font-size:.7rem;color:var(--gold);font-family:'Yatra One',cursive">${(g.plays||0).toLocaleString()} plays</span>
+      </div>
+
+      <!-- File path -->
+      <div style="font-family:monospace;font-size:.68rem;color:rgba(253,243,220,.25);margin-bottom:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${g.file||''}">${g.file||'⚠️ No file set'}</div>
+
+      <!-- Action buttons -->
+      <div style="display:flex;gap:7px">
+        <button onclick="openNameEdit('${g.id}')" style="flex:1;background:rgba(212,160,23,.12);border:1px solid rgba(212,160,23,.25);color:var(--gold-lt);border-radius:8px;padding:7px 4px;font-size:.72rem;cursor:pointer;transition:all .2s;font-family:'Noto Serif Sinhala',serif" onmouseover="this.style.background='rgba(212,160,23,.22)'" onmouseout="this.style.background='rgba(212,160,23,.12)'">✏️ Customize</button>
+        <button onclick="editGame('${g.id}')" style="flex:1;background:rgba(80,120,212,.1);border:1px solid rgba(80,120,212,.25);color:#90CAF9;border-radius:8px;padding:7px 4px;font-size:.72rem;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(80,120,212,.2)'" onmouseout="this.style.background='rgba(80,120,212,.1)'">⚙️ Full Edit</button>
+        <button onclick="deleteGame('${g.id}')" style="background:rgba(212,30,23,.1);border:1px solid rgba(212,30,23,.25);color:#EF9A9A;border-radius:8px;padding:7px 10px;font-size:.72rem;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(212,30,23,.2)'" onmouseout="this.style.background='rgba(212,30,23,.1)'">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
 }
+
+// Quick on/off toggle via checkbox
+async function quickToggle(id, checked){
+  const g=gamesData.find(x=>x.id===id);if(!g)return;
+  g.status=checked?'active':'hidden';
+  try{await PUT('/admin/games/'+id,{status:g.status});}catch(e){}
+  renderGames();
+  aToast(checked?`✅ "${g.name}" LIVE!`:`🔴 "${g.name}" hidden`);
+}
+
+// Open name/customize modal
+let nameEditId=null;
+function openNameEdit(id){
+  nameEditId=id;
+  const g=gamesData.find(x=>x.id===id)||{};
+  document.getElementById('nem-name').value=g.name||'';
+  document.getElementById('nem-icon').value=g.icon||'';
+  document.getElementById('nem-type').value=g.type||'';
+  document.getElementById('nem-desc').value=g.desc||'';
+  const m=document.getElementById('nameEditModal');
+  m.style.display='flex';
+  setTimeout(()=>document.getElementById('nem-name').focus(),100);
+}
+function closeNameEdit(){
+  document.getElementById('nameEditModal').style.display='none';
+  nameEditId=null;
+}
+async function saveNameEdit(){
+  if(!nameEditId)return;
+  const data={
+    name:document.getElementById('nem-name').value.trim(),
+    icon:document.getElementById('nem-icon').value.trim(),
+    type:document.getElementById('nem-type').value.trim(),
+    desc:document.getElementById('nem-desc').value.trim(),
+  };
+  if(!data.name){aToast('⚠️ Name empty!','err');return;}
+  const i=gamesData.findIndex(g=>g.id===nameEditId);
+  if(i>=0)gamesData[i]={...gamesData[i],...data};
+  try{await PUT('/admin/games/'+nameEditId,data);}catch(e){}
+  renderGames();closeNameEdit();
+  aToast('✅ Game customized!');
+}
+// Close modal on backdrop click
+document.getElementById('nameEditModal')?.addEventListener('click',function(e){if(e.target===this)closeNameEdit();});
 function openGameModal(id=null){
   editGameId=id;
   const form=document.getElementById('gameForm');
@@ -876,22 +1012,34 @@ function openGameModal(id=null){
     document.getElementById('gf-type').value=g.type||'';
     document.getElementById('gf-icon').value=g.icon||'';
     document.getElementById('gf-file').value=g.file||'';
+    document.getElementById('gf-players').value=g.players||'';
     document.getElementById('gf-status').value=g.status||'active';
     document.getElementById('gf-badge').value=g.badge||'';
     document.getElementById('gf-desc').value=g.desc||'';
   } else {
-    ['gf-name','gf-type','gf-icon','gf-file','gf-desc'].forEach(id=>document.getElementById(id).value='');
+    ['gf-name','gf-type','gf-icon','gf-file','gf-players','gf-desc'].forEach(x=>document.getElementById(x).value='');
+    document.getElementById('gf-status').value='active';
+    document.getElementById('gf-badge').value='NEW';
   }
   form.scrollIntoView({behavior:'smooth'});
 }
 function editGame(id){openGameModal(id);}
 async function saveGame(){
-  const data={name:document.getElementById('gf-name').value,type:document.getElementById('gf-type').value,icon:document.getElementById('gf-icon').value,file:document.getElementById('gf-file').value,status:document.getElementById('gf-status').value,badge:document.getElementById('gf-badge').value,desc:document.getElementById('gf-desc').value};
+  const data={
+    name:document.getElementById('gf-name').value.trim(),
+    type:document.getElementById('gf-type').value.trim(),
+    icon:document.getElementById('gf-icon').value.trim(),
+    file:document.getElementById('gf-file').value.trim(),
+    players:document.getElementById('gf-players').value.trim(),
+    status:document.getElementById('gf-status').value,
+    badge:document.getElementById('gf-badge').value,
+    desc:document.getElementById('gf-desc').value.trim()
+  };
+  if(!data.name){aToast('⚠️ Game name required!','err');return;}
   try{
-    if(editGameId){await PUT('/games/'+editGameId,data);aToast('✅ Game updated!');}
-    else{await POST('/games',data);aToast('✅ Game added!');}
-  }catch(e){aToast('⚠️ Saved locally (server offline)','err');}
-  // Local update
+    if(editGameId){await PUT('/admin/games/'+editGameId,data);aToast('✅ Game updated!');}
+    else{await POST('/admin/games',data);aToast('✅ Game added!');}
+  }catch(e){aToast('⚠️ Saved locally','err');}
   if(editGameId){const i=gamesData.findIndex(g=>g.id===editGameId);if(i>=0)gamesData[i]={...gamesData[i],...data};}
   else{gamesData.push({id:'g'+Date.now(),...data,plays:0});}
   renderGames();document.getElementById('gameForm').style.display='none';
@@ -899,12 +1047,12 @@ async function saveGame(){
 async function toggleGame(id){
   const g=gamesData.find(x=>x.id===id);if(!g)return;
   g.status=g.status==='active'?'hidden':'active';
-  try{await PUT('/games/'+id,{status:g.status});}catch(e){}
-  renderGames();aToast(`✅ Game ${g.status==='active'?'shown':'hidden'}`);
+  try{await PUT('/admin/games/'+id,{status:g.status});}catch(e){}
+  renderGames();aToast(`${g.status==='active'?'✅':'🔴'} Game ${g.status==='active'?'LIVE':'hidden'}!`);
 }
 async function deleteGame(id){
   if(!confirm('Delete this game?'))return;
-  try{await DEL('/games/'+id);}catch(e){}
+  try{await DEL('/admin/games/'+id);}catch(e){}
   gamesData=gamesData.filter(g=>g.id!==id);renderGames();aToast('🗑️ Game deleted');
 }
 
