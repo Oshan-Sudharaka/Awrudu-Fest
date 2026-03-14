@@ -58,13 +58,16 @@ body{font-family:'Noto Sans Sinhala',sans-serif;}
 .side-panel{display:flex;flex-direction:column;gap:9px;width:155px;flex-shrink:0;}
 
 .player-card{
-  background:linear-gradient(135deg,rgba(28,14,0,.95),rgba(15,7,0,.98));
-  border:1.5px solid rgba(245,200,66,.18);border-radius:12px;
+  background:linear-gradient(135deg,rgba(20,10,0,.55),rgba(8,4,0,.65));
+  border:1.5px solid rgba(245,200,66,.22);border-radius:12px;
   padding:9px 11px;display:flex;align-items:center;gap:8px;transition:all .3s;position:relative;overflow:hidden;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
 }
-.player-card.active{border-color:var(--gold);box-shadow:0 0 20px rgba(245,200,66,.22),inset 0 0 24px rgba(245,200,66,.04);}
-.player-card.active::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,200,66,.06),transparent);pointer-events:none;}
-.p-avatar{font-size:24px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));}
+.player-card.active{border-color:var(--gold);box-shadow:0 0 22px rgba(245,200,66,.28),inset 0 0 28px rgba(245,200,66,.06);}
+.player-card.active::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,200,66,.08),transparent);pointer-events:none;}
+.p-avatar-wrap{flex-shrink:0;width:54px;height:66px;position:relative;}
+.p-avatar-cv{display:block;width:54px;height:66px;}
 .p-info{flex:1;min-width:0;}
 .p-name{font-size:9px;color:rgba(255,255,255,.45);letter-spacing:1.5px;text-transform:uppercase;}
 .p-pos-wrap{display:flex;align-items:baseline;gap:3px;margin-top:1px;}
@@ -75,7 +78,7 @@ body{font-family:'Noto Sans Sinhala',sans-serif;}
 @keyframes pdot{0%,100%{transform:scale(1);}50%{transform:scale(1.5);opacity:.5;}}
 
 /* Dice */
-.dice-box{background:linear-gradient(135deg,rgba(28,14,0,.98),rgba(12,6,0,1));border:1.5px solid rgba(245,200,66,.18);border-radius:12px;padding:11px;text-align:center;}
+.dice-box{background:linear-gradient(135deg,rgba(20,10,0,.55),rgba(8,4,0,.65));border:1.5px solid rgba(245,200,66,.18);border-radius:12px;padding:11px;text-align:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
 .dice-lbl{font-size:9px;color:var(--gold-deep);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:7px;}
 .dice-3d{width:66px;height:66px;margin:0 auto 9px;cursor:pointer;position:relative;}
 .dice-face{
@@ -103,7 +106,7 @@ body{font-family:'Noto Sans Sinhala',sans-serif;}
 .dice-status{margin-top:7px;font-size:10px;color:rgba(255,255,255,.4);min-height:13px;line-height:1.4;}
 
 /* Log */
-.log-box{background:linear-gradient(135deg,rgba(25,12,0,.9),rgba(12,6,0,.95));border:1.5px solid rgba(245,200,66,.12);border-radius:12px;padding:9px;flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;}
+.log-box{background:linear-gradient(135deg,rgba(18,9,0,.5),rgba(8,4,0,.6));border:1.5px solid rgba(245,200,66,.12);border-radius:12px;padding:9px;flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
 .log-lbl{font-size:9px;color:var(--gold-deep);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:6px;}
 .log-entries{overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:2px;}
 .log-entries::-webkit-scrollbar{width:2px;}.log-entries::-webkit-scrollbar-thumb{background:var(--gold-deep);border-radius:2px;}
@@ -158,7 +161,9 @@ body{font-family:'Noto Sans Sinhala',sans-serif;}
 
     <div class="side-panel">
       <div class="player-card active" id="p1card">
-        <div class="p-avatar">👨‍🌾</div>
+        <div class="p-avatar-wrap">
+          <canvas id="av1" width="54" height="66" class="p-avatar-cv"></canvas>
+        </div>
         <div class="p-info">
           <div class="p-name">ඔබ</div>
           <div class="p-pos-wrap"><span class="p-pos" id="p1pos">—</span><span class="p-of">/100</span></div>
@@ -167,7 +172,9 @@ body{font-family:'Noto Sans Sinhala',sans-serif;}
       </div>
 
       <div class="player-card" id="p2card">
-        <div class="p-avatar">🤖</div>
+        <div class="p-avatar-wrap">
+          <canvas id="av2" width="54" height="66" class="p-avatar-cv"></canvas>
+        </div>
         <div class="p-info">
           <div class="p-name">AI</div>
           <div class="p-pos-wrap"><span class="p-pos" id="p2pos">—</span><span class="p-of">/100</span></div>
@@ -213,7 +220,9 @@ body{font-family:'Noto Sans Sinhala',sans-serif;}
 <!-- WIN -->
 <div class="overlay hidden" id="ov-win">
   <div class="ov-badge">GAME OVER</div>
-  <div class="ov-icon" id="win-icon">🏆</div>
+  <div style="margin-bottom:14px;filter:drop-shadow(0 4px 20px rgba(245,200,66,.4))">
+    <canvas id="win-char-cv" width="90" height="110" style="display:block;margin:0 auto"></canvas>
+  </div>
   <div class="ov-title" id="win-title">ජය!</div>
   <div class="ov-line"></div>
   <div class="ov-desc" id="win-desc"></div>
@@ -421,28 +430,396 @@ function drawLadder(bot,top){
   bctx.fillText('🪜',b.x,b.y);
 }
 
+// roundRect polyfill for older browsers
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+    r=Math.min(r,w/2,h/2);
+    this.beginPath();
+    this.moveTo(x+r,y);this.lineTo(x+w-r,y);this.arcTo(x+w,y,x+w,y+r,r);
+    this.lineTo(x+w,y+h-r);this.arcTo(x+w,y+h,x+w-r,y+h,r);
+    this.lineTo(x+r,y+h);this.arcTo(x,y+h,x,y+h-r,r);
+    this.lineTo(x,y+r);this.arcTo(x,y,x+r,y,r);
+    this.closePath();return this;
+  };
+}
+
+// ═══════════════════════════════════════════════════
+//  CHARACTER DRAWING
+//  Coordinate system: translate(x, y) where x=center, y=topmost point
+//  Full height: 79px (hat tip to feet), width: ~54px
+// ═══════════════════════════════════════════════════
+
+// ── FARMER BOY (Player 1) — warm Sinhala village boy
+function drawFarmerBoy(ctx, cx, ty, sc, alpha){
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(cx, ty);
+  ctx.scale(sc, sc);
+  // All coords: 0=hat tip, 79=feet. Center-x=0
+
+  // FEET / SANDALS
+  ctx.fillStyle='#7a4a1a';
+  ctx.beginPath();ctx.ellipse(-7,77,5,2.5,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(7,77,5,2.5,0,0,Math.PI*2);ctx.fill();
+
+  // LEGS (dhoti — cream/white)
+  const legG=ctx.createLinearGradient(-9,50,9,77);
+  legG.addColorStop(0,'#f0e6cc');legG.addColorStop(1,'#d4c090');
+  ctx.fillStyle=legG;
+  ctx.beginPath();ctx.roundRect(-10,50,9,26,3);ctx.fill();
+  ctx.beginPath();ctx.roundRect(1,50,9,26,3);ctx.fill();
+  // Dhoti drape line
+  ctx.strokeStyle='rgba(160,130,70,0.45)';ctx.lineWidth=0.9;
+  ctx.beginPath();ctx.moveTo(-5,52);ctx.quadraticCurveTo(0,58,5,52);ctx.stroke();
+
+  // BODY / KURTA
+  const bodyG=ctx.createLinearGradient(-11,28,11,51);
+  bodyG.addColorStop(0,'#fffbf0');bodyG.addColorStop(1,'#e4d4a8');
+  ctx.fillStyle=bodyG;
+  ctx.beginPath();ctx.roundRect(-11,27,22,25,5);ctx.fill();
+  // Kurta V-neck
+  ctx.strokeStyle='rgba(190,155,80,0.55)';ctx.lineWidth=1.1;
+  ctx.beginPath();ctx.moveTo(-3,27);ctx.lineTo(0,34);ctx.lineTo(3,27);ctx.stroke();
+  // Buttons
+  ctx.fillStyle='rgba(165,125,55,0.55)';
+  [36,41,46].forEach(yy=>{ctx.beginPath();ctx.arc(0,yy,1.1,0,Math.PI*2);ctx.fill();});
+  // Side border stitch
+  ctx.strokeStyle='rgba(190,155,80,0.2)';ctx.lineWidth=0.7;
+  ctx.setLineDash([2,2]);
+  ctx.beginPath();ctx.moveTo(-9,30);ctx.lineTo(-9,50);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(9,30);ctx.lineTo(9,50);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // LEFT ARM
+  const armG=ctx.createLinearGradient(-20,28,-5,47);
+  armG.addColorStop(0,'#d4906a');armG.addColorStop(1,'#b06840');
+  ctx.fillStyle=armG;
+  ctx.beginPath();ctx.roundRect(-19,28,8,20,4);ctx.fill();
+  // LEFT HAND
+  ctx.fillStyle='#c07850';
+  ctx.beginPath();ctx.ellipse(-15,50,4.5,3.5,0.3,0,Math.PI*2);ctx.fill();
+
+  // RIGHT ARM (holding stick — slightly forward)
+  ctx.fillStyle=armG;
+  ctx.beginPath();ctx.roundRect(11,25,8,20,4);ctx.fill();
+  // RIGHT HAND
+  ctx.fillStyle='#c07850';
+  ctx.beginPath();ctx.ellipse(15,47,4.5,3.5,-0.3,0,Math.PI*2);ctx.fill();
+
+  // STICK in right hand
+  ctx.save();
+  ctx.strokeStyle='#5c3010';ctx.lineWidth=2.8;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(18,28);ctx.lineTo(22,68);ctx.stroke();
+  // Stick knots
+  ctx.strokeStyle='#8a5020';ctx.lineWidth=1.5;
+  [38,50,62].forEach(yy=>{ctx.beginPath();ctx.arc(20,yy,2,0,Math.PI*2);ctx.stroke();});
+  // Gold tip
+  const tipG=ctx.createRadialGradient(22,68,0,22,68,3.5);
+  tipG.addColorStop(0,'#ffe080');tipG.addColorStop(1,'#c89010');
+  ctx.fillStyle=tipG;ctx.beginPath();ctx.arc(22,68,3,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+
+  // NECK
+  const neckG=ctx.createLinearGradient(-4,20,4,27);
+  neckG.addColorStop(0,'#d08060');neckG.addColorStop(1,'#b06040');
+  ctx.fillStyle=neckG;
+  ctx.beginPath();ctx.roundRect(-4,21,8,8,2);ctx.fill();
+
+  // HEAD
+  const headG=ctx.createRadialGradient(-3,13,1,0,15,13);
+  headG.addColorStop(0,'#e8a878');headG.addColorStop(0.6,'#d08055');headG.addColorStop(1,'#b86035');
+  ctx.fillStyle=headG;
+  ctx.beginPath();ctx.ellipse(0,15,10,11,0,0,Math.PI*2);ctx.fill();
+  // Face highlight (cheek sheen)
+  ctx.fillStyle='rgba(255,200,160,0.2)';
+  ctx.beginPath();ctx.ellipse(-4,12,4,5,-0.3,0,Math.PI*2);ctx.fill();
+
+  // EYEBROWS
+  ctx.strokeStyle='#5c2c0a';ctx.lineWidth=1.3;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(-6,10);ctx.quadraticCurveTo(-3,8.5,-1,10);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(1,10);ctx.quadraticCurveTo(3,8.5,6,10);ctx.stroke();
+
+  // EYES
+  ctx.fillStyle='#1a0800';
+  ctx.beginPath();ctx.ellipse(-4,13,2.5,2.8,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(4,13,2.5,2.8,0,0,Math.PI*2);ctx.fill();
+  // Iris
+  ctx.fillStyle='#4a2000';
+  ctx.beginPath();ctx.arc(-4,13,1.8,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(4,13,1.8,0,Math.PI*2);ctx.fill();
+  // Eye shine (2 dots per eye for realism)
+  ctx.fillStyle='rgba(255,255,255,0.9)';
+  ctx.beginPath();ctx.arc(-3,11.8,0.9,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(4.8,11.8,0.9,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.4)';
+  ctx.beginPath();ctx.arc(-5,13.5,0.5,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(3,13.5,0.5,0,Math.PI*2);ctx.fill();
+
+  // NOSE
+  ctx.fillStyle='rgba(160,80,40,0.35)';
+  ctx.beginPath();ctx.ellipse(0,16,1.8,1.2,0,0,Math.PI*2);ctx.fill();
+
+  // SMILE
+  ctx.strokeStyle='#8a4020';ctx.lineWidth=1.3;ctx.lineCap='round';
+  ctx.beginPath();ctx.arc(0,17.5,3.5,0.15,Math.PI-0.15);ctx.stroke();
+  // Cheek blush
+  ctx.fillStyle='rgba(220,100,80,0.18)';
+  ctx.beginPath();ctx.ellipse(-6.5,17,2.5,1.8,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(6.5,17,2.5,1.8,0,0,Math.PI*2);ctx.fill();
+
+  // EARS
+  ctx.fillStyle='#c87550';
+  ctx.beginPath();ctx.ellipse(-10,14,2.2,3,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(10,14,2.2,3,0,0,Math.PI*2);ctx.fill();
+
+  // CONICAL HAT (Kadathath)
+  const hatG=ctx.createLinearGradient(-12,3,12,21);
+  hatG.addColorStop(0,'#7ab830');hatG.addColorStop(0.5,'#4a8818');hatG.addColorStop(1,'#285008');
+  ctx.fillStyle=hatG;
+  ctx.beginPath();
+  ctx.moveTo(-13,21);ctx.lineTo(0,2);ctx.lineTo(13,21);
+  ctx.quadraticCurveTo(0,25,-13,21);ctx.closePath();ctx.fill();
+  // Hat sheen
+  ctx.fillStyle='rgba(255,255,255,0.14)';
+  ctx.beginPath();ctx.moveTo(-13,21);ctx.lineTo(0,2);ctx.lineTo(5,12);ctx.lineTo(-5,21);ctx.fill();
+  // Hat band
+  const bandG=ctx.createLinearGradient(-13,21,13,24);
+  bandG.addColorStop(0,'#d4a020');bandG.addColorStop(0.5,'#f0c840');bandG.addColorStop(1,'#d4a020');
+  ctx.fillStyle=bandG;
+  ctx.beginPath();ctx.moveTo(-13,21);ctx.quadraticCurveTo(0,26,13,21);ctx.quadraticCurveTo(0,28,-13,21);ctx.fill();
+  // Hat tip dot
+  ctx.fillStyle='#ffe080';
+  ctx.beginPath();ctx.arc(0,2,1.5,0,Math.PI*2);ctx.fill();
+
+  ctx.restore();
+}
+
+// ── ROBOT MONK (AI) — golden mechanical monk with saffron robe
+function drawRobotMonk(ctx, cx, ty, sc, alpha){
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(cx, ty);
+  ctx.scale(sc, sc);
+  // All coords: 0=antenna tip, 79=feet. Center-x=0
+
+  // ROBE BASE / FEET
+  ctx.fillStyle='#7a4010';
+  ctx.beginPath();ctx.ellipse(-6,77,4.5,2.2,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(6,77,4.5,2.2,0,0,Math.PI*2);ctx.fill();
+
+  // ROBE BODY (saffron, flowing)
+  const robeG=ctx.createLinearGradient(-13,36,13,77);
+  robeG.addColorStop(0,'#f08030');robeG.addColorStop(0.5,'#c05818');robeG.addColorStop(1,'#8a3808');
+  ctx.fillStyle=robeG;
+  ctx.beginPath();
+  ctx.moveTo(-12,38);
+  ctx.bezierCurveTo(-14,52,-15,65,-13,77);
+  ctx.quadraticCurveTo(0,80,13,77);
+  ctx.bezierCurveTo(15,65,14,52,12,38);
+  ctx.closePath();ctx.fill();
+  // Robe folds (vertical lines)
+  ctx.save();ctx.strokeStyle='rgba(100,35,5,0.3)';ctx.lineWidth=1;
+  [-5,0,5].forEach(xo=>{
+    ctx.beginPath();ctx.moveTo(xo,42);ctx.bezierCurveTo(xo-1,55,xo+1,65,xo,75);ctx.stroke();
+  });ctx.restore();
+  // Robe bottom hem decoration
+  ctx.strokeStyle='rgba(240,180,60,0.45)';ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(-13,73);ctx.quadraticCurveTo(0,76,13,73);ctx.stroke();
+
+  // CHEST PLATE (gold metal)
+  const chestG=ctx.createLinearGradient(-12,22,12,38);
+  chestG.addColorStop(0,'#f5d050');chestG.addColorStop(0.4,'#c89010');chestG.addColorStop(1,'#7a5800');
+  ctx.fillStyle=chestG;
+  ctx.beginPath();ctx.roundRect(-12,22,24,18,6);ctx.fill();
+  // Chest highlight
+  ctx.fillStyle='rgba(255,240,150,0.18)';
+  ctx.beginPath();ctx.roundRect(-10,23,10,7,4);ctx.fill();
+  // Circuit lines
+  ctx.save();ctx.strokeStyle='rgba(255,220,80,0.38)';ctx.lineWidth=0.8;
+  ctx.strokeRect(-8,25,16,6);
+  ctx.beginPath();ctx.moveTo(-8,28);ctx.lineTo(8,28);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(-4,25);ctx.lineTo(-4,31);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(4,25);ctx.lineTo(4,31);ctx.stroke();
+  ctx.restore();
+  // GEM (glowing teal)
+  const gemG=ctx.createRadialGradient(-0.5,32,0,0,32.5,5);
+  gemG.addColorStop(0,'#aaffff');gemG.addColorStop(0.4,'#00c8e0');gemG.addColorStop(1,'#004060');
+  ctx.fillStyle=gemG;
+  ctx.beginPath();ctx.arc(0,32,4,0,Math.PI*2);ctx.fill();
+  ctx.save();ctx.shadowColor='#00e5ff';ctx.shadowBlur=8;
+  ctx.strokeStyle='rgba(0,220,255,0.7)';ctx.lineWidth=1;ctx.stroke();
+  ctx.restore();
+
+  // LEFT ARM
+  const armG=ctx.createLinearGradient(-20,24,-10,40);
+  armG.addColorStop(0,'#e8b030');armG.addColorStop(1,'#8a6000');
+  ctx.fillStyle=armG;
+  ctx.beginPath();ctx.roundRect(-21,24,9,18,4);ctx.fill();
+  // Joint ball
+  ctx.fillStyle='rgba(245,200,60,0.7)';
+  ctx.beginPath();ctx.arc(-16,24,3.5,0,Math.PI*2);ctx.fill();
+  // Left hand / claw
+  ctx.fillStyle='#c89010';
+  ctx.beginPath();ctx.ellipse(-16,44,5,3.5,-0.2,0,Math.PI*2);ctx.fill();
+  // Finger lines
+  ctx.strokeStyle='#7a5800';ctx.lineWidth=0.8;
+  [-19,-16,-13].forEach(xo=>{ctx.beginPath();ctx.moveTo(xo,43);ctx.lineTo(xo,47);ctx.stroke();});
+
+  // RIGHT ARM (prayer pose — angled up)
+  ctx.fillStyle=armG;
+  ctx.save();ctx.translate(16,28);ctx.rotate(-0.25);
+  ctx.beginPath();ctx.roundRect(-4.5,0,9,18,4);ctx.fill();
+  ctx.restore();
+  // Joint ball right
+  ctx.fillStyle='rgba(245,200,60,0.7)';
+  ctx.beginPath();ctx.arc(16,24,3.5,0,Math.PI*2);ctx.fill();
+  // Right hand
+  ctx.fillStyle='#c89010';
+  ctx.beginPath();ctx.ellipse(16,44,5,3.5,0.2,0,Math.PI*2);ctx.fill();
+  [13,16,19].forEach(xo=>{ctx.beginPath();ctx.moveTo(xo,43);ctx.lineTo(xo,47);ctx.stroke();});
+
+  // NECK
+  const neckG=ctx.createLinearGradient(-4,18,4,22);
+  neckG.addColorStop(0,'#d4a020');neckG.addColorStop(1,'#8a6000');
+  ctx.fillStyle=neckG;
+  ctx.beginPath();ctx.roundRect(-5,18,10,6,2);ctx.fill();
+  // Neck ridges
+  ctx.strokeStyle='rgba(255,210,60,0.3)';ctx.lineWidth=0.9;
+  [19.5,21,22.5].forEach(yy=>{ctx.beginPath();ctx.moveTo(-5,yy);ctx.lineTo(5,yy);ctx.stroke();});
+
+  // HEAD (rounded box, metallic gold)
+  const headG=ctx.createRadialGradient(-4,9,1,0,11,16);
+  headG.addColorStop(0,'#ffe8a0');headG.addColorStop(0.5,'#c89010');headG.addColorStop(1,'#6a4800');
+  ctx.fillStyle=headG;
+  ctx.beginPath();ctx.roundRect(-13,5,26,16,8);ctx.fill();
+  // Head top highlight
+  ctx.fillStyle='rgba(255,255,220,0.15)';
+  ctx.beginPath();ctx.roundRect(-11,6,12,6,5);ctx.fill();
+  // Head side bolts
+  ctx.fillStyle='#c89010';
+  ctx.beginPath();ctx.arc(-14,13,2.5,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(14,13,2.5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,200,50,0.5)';
+  ctx.beginPath();ctx.arc(-14,13,1.2,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(14,13,1.2,0,Math.PI*2);ctx.fill();
+
+  // EYE SOCKETS
+  ctx.fillStyle='#1a0c00';
+  ctx.beginPath();ctx.roundRect(-11,8,9,9,3);ctx.fill();
+  ctx.beginPath();ctx.roundRect(2,8,9,9,3);ctx.fill();
+
+  // EYES — animated blue glow
+  const t=Date.now()*0.003;
+  const eyeBright=0.7+Math.sin(t)*0.3;
+  const eyeG1=ctx.createRadialGradient(-6.5,12,0,-6.5,12,4);
+  eyeG1.addColorStop(0,`rgba(180,255,255,${eyeBright})`);
+  eyeG1.addColorStop(0.4,`rgba(0,200,255,${eyeBright*0.85})`);
+  eyeG1.addColorStop(1,'rgba(0,60,120,0.9)');
+  ctx.fillStyle=eyeG1;
+  ctx.beginPath();ctx.arc(-6.5,12,3.8,0,Math.PI*2);ctx.fill();
+  const eyeG2=ctx.createRadialGradient(6.5,12,0,6.5,12,4);
+  eyeG2.addColorStop(0,`rgba(180,255,255,${eyeBright})`);
+  eyeG2.addColorStop(0.4,`rgba(0,200,255,${eyeBright*0.85})`);
+  eyeG2.addColorStop(1,'rgba(0,60,120,0.9)');
+  ctx.fillStyle=eyeG2;
+  ctx.beginPath();ctx.arc(6.5,12,3.8,0,Math.PI*2);ctx.fill();
+  // Scan line across eyes
+  const scanY=10+((Date.now()%1200)/1200)*8;
+  ctx.save();
+  ctx.beginPath();ctx.rect(-12,8,24,9);ctx.clip();
+  ctx.strokeStyle=`rgba(0,220,255,${0.4+Math.sin(t*2)*0.2})`;ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(-11,scanY);ctx.lineTo(11,scanY);ctx.stroke();
+  ctx.restore();
+  // Eye corner reflections
+  ctx.fillStyle='rgba(255,255,255,0.7)';
+  ctx.beginPath();ctx.arc(-8,9.5,1,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(5,9.5,1,0,Math.PI*2);ctx.fill();
+
+  // ANTENNA
+  ctx.save();
+  ctx.strokeStyle='#c89010';ctx.lineWidth=2.2;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(0,5);ctx.lineTo(0,-8);ctx.stroke();
+  // Antenna orb (glowing, pulsing)
+  const pulse=0.8+Math.sin(Date.now()*0.005)*0.2;
+  const orbG=ctx.createRadialGradient(0,-10,0,0,-10,5);
+  orbG.addColorStop(0,'#ffffff');
+  orbG.addColorStop(0.3,`rgba(0,220,255,${pulse})`);
+  orbG.addColorStop(1,'rgba(0,100,200,0)');
+  ctx.fillStyle=orbG;
+  ctx.beginPath();ctx.arc(0,-10,5*pulse,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#00e5ff';
+  ctx.beginPath();ctx.arc(0,-10,2.5,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+
+  ctx.restore();
+}
+
+// Draw side-panel avatar canvases
+function initAvatars(){
+  const av1=document.getElementById('av1');
+  const av2=document.getElementById('av2');
+  if(av1){
+    const c=av1.getContext('2d');
+    c.clearRect(0,0,54,66);
+    // farmer: center=27, draw at y=0 (has 21px overhead for hat, then 58 body)
+    // scale: natural char width=27*2=54 → fit into 54px → sc=1; height 79 → 66 → sc=66/79
+    const sc1=Math.min(54/54, 66/79);
+    drawFarmerBoy(c, 27, 2, sc1, 1);
+  }
+  if(av2){
+    const c=av2.getContext('2d');
+    c.clearRect(0,0,54,66);
+    const sc2=Math.min(54/54, 66/79);
+    drawRobotMonk(c, 27, 2, sc2, 1);
+  }
+}
 function drawTokens(){
-  const sz=Math.max(16,BS*.58);
-  bctx.font=`${sz}px serif`;
-  bctx.textAlign='center';bctx.textBaseline='middle';
   const same=G.p1pos===G.p2pos&&G.p1pos>0;
 
-  function token(pos,emoji,ox=0){
+  // Character natural size: 54w x 79h (includes hat/antenna overhead)
+  // Origin in drawFn: x=center-x, y=top of character (0 = hat tip)
+  const CH=79, CW=54; // character natural bounds
+
+  function token(pos, drawFn, ox=0){
     if(pos<=0)return;
     const{x,y}=cellXY(pos);
-    // Shadow
-    bctx.fillStyle='rgba(0,0,0,.45)';
-    bctx.beginPath();bctx.ellipse(x+ox+1.5,y+BS*.28,BS*.2,BS*.08,0,0,Math.PI*2);bctx.fill();
-    // Gold ring
+    const cx=x+ox;
+
+    // Scale to fit nicely inside cell
+    const maxH=BS*0.88, maxW=BS*0.78;
+    const sc=Math.min(maxH/CH, maxW/CW);
+
+    const drawnH=CH*sc;
+    const drawnW=CW*sc;
+
+    // Place: character feet at cell center-y + small offset down
+    const topY = y - drawnH*0.55;
+
+    // Ground shadow
+    bctx.fillStyle='rgba(0,0,0,0.35)';
+    bctx.beginPath();
+    bctx.ellipse(cx, y+drawnH*0.38, drawnW*0.42, drawnH*0.07, 0, 0, Math.PI*2);
+    bctx.fill();
+
+    // Colored aura disc behind character
     bctx.save();
-    bctx.shadowColor='rgba(245,200,66,.6)';bctx.shadowBlur=8;
-    bctx.strokeStyle='rgba(245,200,66,.65)';bctx.lineWidth=2;
-    bctx.beginPath();bctx.arc(x+ox,y,sz*.53,0,Math.PI*2);bctx.stroke();
+    const auraColor = drawFn===drawFarmerBoy ? 'rgba(120,200,80,0.18)' : 'rgba(0,180,255,0.15)';
+    bctx.fillStyle=auraColor;
+    bctx.beginPath();
+    bctx.arc(cx, y, drawnW*0.52, 0, Math.PI*2);
+    bctx.fill();
+    // Gold ring
+    bctx.shadowColor='rgba(245,200,66,0.65)';bctx.shadowBlur=10;
+    bctx.strokeStyle='rgba(245,200,66,0.55)';bctx.lineWidth=1.8;
+    bctx.beginPath();bctx.arc(cx, y, drawnW*0.52, 0, Math.PI*2);bctx.stroke();
     bctx.restore();
-    bctx.fillText(emoji,x+ox,y);
+
+    // Draw character — origin at (cx, topY), scaled
+    drawFn(bctx, cx, topY, sc, 1);
   }
-  token(G.p1pos,'👨‍🌾',same?-BS*.19:0);
-  token(G.p2pos,'🤖',same?BS*.19:0);
+
+  token(G.p1pos, drawFarmerBoy, same ? -BS*0.24 : 0);
+  token(G.p2pos, drawRobotMonk,  same ?  BS*0.24 : 0);
 }
 
 // ═══ DICE ═══
@@ -579,11 +956,24 @@ function win(player){
       r.left+Math.random()*bc.width,r.top+Math.random()*bc.height*.6,
       ['#FFD700','#FF6B6B','#69F0AE','#6BB5FF','#FFFFFF','#F5C842'],42,13),i*170);
   }
-  document.getElementById('win-icon').textContent=isP1?'🏆':'🤖';
+  
   document.getElementById('win-title').textContent=isP1?'ජය ලැබුණා! 🎊':'AI ජය ගත්තා!';
   document.getElementById('win-desc').innerHTML=isP1
     ?`ඔබ <strong style="color:var(--gold)">100</strong> ට ළඟා වුණා!<br>AI ව පරාජය කළා! 🥳`
     :`AI <strong style="color:var(--gold)">100</strong> ට ළඟා වුණා.<br>නැවත උත්සාහ කරන්න! 💪`;
+  // Draw winner character on overlay canvas
+  setTimeout(()=>{
+    const wc=document.getElementById('win-char-cv');
+    if(wc){
+      const wctx=wc.getContext('2d');
+      wctx.clearRect(0,0,90,110);
+      // win canvas: 90x110. Scale to fit char (54x79 natural)
+      const wsc=Math.min(90/54, 100/79);
+      // center x=45, top y=5
+      if(isP1) drawFarmerBoy(wctx, 45, 5, wsc, 1);
+      else     drawRobotMonk(wctx,  45, 5, wsc, 1);
+    }
+  },200);
   setTimeout(()=>document.getElementById('ov-win').classList.remove('hidden'),1300);
 }
 
@@ -594,16 +984,26 @@ function startGame(){
   document.getElementById('roll-btn').disabled=false;
   document.getElementById('dice-status').textContent='ඔබේ turn! 🎯';
   log('ක්‍රීඩාව ආරම්භ! 🎮 ශුභ කාමනා!');
-  renderDice(1);refreshUI();drawBoard();
+  renderDice(1);refreshUI();drawBoard();initAvatars();
 }
 function restartGame(){
   document.getElementById('ov-win').classList.add('hidden');startGame();
 }
 
 // ═══ LOOP ═══
-function loop(){requestAnimationFrame(loop);updateParts();}
+let lastAvFrame=0;
+function loop(ts){
+  requestAnimationFrame(loop);
+  updateParts();
+  // Re-render avatars every ~100ms for animated eyes
+  if(ts - lastAvFrame > 100){
+    lastAvFrame=ts;
+    initAvatars();
+  }
+}
 requestAnimationFrame(loop);
 drawBoard();
+initAvatars();
 </script>
 </body>
 </html>

@@ -878,7 +878,13 @@ let gamesData=[...defaultGames];
 let editGameId=null;
 
 async function loadGames(){
-  try{const d=await API('/admin/games');if(d.length)gamesData=d;}catch(e){}
+  try{
+    const d=await API('/admin/games');
+    if(d && d.length){
+      // Normalise: ensure each game has .id (server may return gameId)
+      gamesData=d.map(g=>({...g, id: g.id||g.gameId||('g'+Math.random().toString(36).slice(2))}));
+    }
+  }catch(e){}
   renderGames();
 }
 function renderGames(){
@@ -1041,7 +1047,7 @@ async function saveGame(){
     else{await POST('/admin/games',data);aToast('✅ Game added!');}
   }catch(e){aToast('⚠️ Saved locally','err');}
   if(editGameId){const i=gamesData.findIndex(g=>g.id===editGameId);if(i>=0)gamesData[i]={...gamesData[i],...data};}
-  else{gamesData.push({id:'g'+Date.now(),...data,plays:0});}
+  else{const newId='g'+Date.now();gamesData.push({id:newId,gameId:newId,...data,plays:0});}
   renderGames();document.getElementById('gameForm').style.display='none';
 }
 async function toggleGame(id){

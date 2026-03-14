@@ -1386,54 +1386,53 @@ loadLB();
 /* Load play counts + dynamic games from API */
 let liveGamesData = null;
 
+// ── Background class map by game type
+const BG_MAP = {
+  'SHELL GAME':'tb-shell','ACTION TAG':'tb-tag','TURN BASED':'tb-kotta',
+  'TUG OF WAR':'tb-kiriko','POT BREAKING':'tb-kanamut','SLINGSHOT':'tb-pancha',
+  'TREASURE HUNT':'tb-rahas','BOARD GAME':'tb-snake',
+};
+
+// ── Load from API, fall back to hardcoded cards if server offline
 async function loadGamesFromAPI(){
   try{
     const res = await fetch('/api/games');
-    if(res.ok){
-      const games = await res.json();
-      liveGamesData = games;
-      renderGamesGrid(games);
-      // Update GAMES map dynamically
-      games.forEach(g=>{
-        if(g.gameId && g.file){
-          GAMES[g.gameId]={file:g.file, title:`${g.icon||'🎮'} ${g.name}`};
-        }
-      });
-    }
-  }catch(e){}
+    if(!res.ok) return; // keep hardcoded cards
+    const games = await res.json();
+    if(!games || !games.length) return; // keep hardcoded cards
+    liveGamesData = games;
+
+    // Update GAMES launch map (use id OR gameId)
+    games.forEach(g=>{
+      const key = g.id || g.gameId;
+      if(key && g.file) GAMES[key]={file:g.file, title:`${g.icon||'🎮'} ${g.name}`};
+    });
+
+    renderGamesGrid(games);
+  }catch(e){
+    // Server offline — hardcoded cards stay visible, no error
+  }
 }
 
 function renderGamesGrid(games){
   const grid = document.getElementById('gamesGrid');
   if(!grid) return;
-
-  // Filter: only active or soon
   const visible = games.filter(g => g.status !== 'hidden');
-
-  // Background color map per type
-  const bgMap = {
-    'SHELL GAME':   'tb-shell',
-    'ACTION TAG':   'tb-tag',
-    'TURN BASED':   'tb-kotta',
-    'TUG OF WAR':   'tb-kiriko',
-    'POT BREAKING': 'tb-kanamut',
-    'SLINGSHOT':    'tb-pancha',
-    'TREASURE HUNT':'tb-rahas',
-    'BOARD GAME':   'tb-snake',
-  };
+  if(!visible.length) return; // don't wipe if nothing to show
 
   grid.innerHTML = visible.map((g,i) => {
-    const bgClass = bgMap[g.type] || 'tb-soon';
-    const isSoon  = g.status === 'soon';
-    const badgeHtml = g.badge
+    const key      = g.id || g.gameId || '';
+    const bgClass  = BG_MAP[g.type] || 'tb-soon';
+    const isSoon   = g.status === 'soon';
+    const badgeHtml= g.badge
       ? `<span class="gcard-badge ${g.badge==='HOT'?'badge-hot':'badge-new'}">${g.badge==='HOT'?'HOT 🔥':'NEW ✨'}</span>`
       : '';
     return `
     <div class="gcard${isSoon?' gcard-soon':''}">
-      <div class="gcard-img ${bgClass}" style="animation-delay:${i*0.15}s">
-        <span class="gcard-icon" style="animation-delay:${i*0.3}s">${g.icon||'🎮'}</span>
+      <div class="gcard-img ${bgClass}" style="animation-delay:${i*0.12}s">
+        <span class="gcard-icon" style="animation-delay:${i*0.25}s">${g.icon||'🎮'}</span>
         ${badgeHtml}
-        <span class="gcard-plays" id="plays-${g.gameId}">-- plays</span>
+        <span class="gcard-plays" id="plays-${key}">-- plays</span>
       </div>
       <div class="gcard-body">
         <span class="gcard-tag">${g.type||'GAME'}</span>
@@ -1443,7 +1442,7 @@ function renderGamesGrid(games){
           <span class="gcard-meta">👤 ${g.players||'1 Player'}</span>
           ${isSoon
             ? `<button class="gcard-btn" disabled style="opacity:.4">Coming Soon</button>`
-            : `<button class="gcard-btn" onclick="launchGame('${g.gameId}')">ෙකළිය ▶</button>`
+            : `<button class="gcard-btn" onclick="launchGame('${key}')">ෙකළිය ▶</button>`
           }
         </div>
       </div>
@@ -1454,20 +1453,19 @@ function renderGamesGrid(games){
 async function loadPlayCounts(){
   try{
     const res=await fetch('/api/stats');
-    if(res.ok){
-      const d=await res.json();
-      Object.entries(d).forEach(([key,val])=>{
-        const el=document.getElementById('plays-'+key);
-        if(el) el.textContent=val.toLocaleString()+' plays';
-      });
-    }
+    if(!res.ok) return;
+    const d=await res.json();
+    Object.entries(d).forEach(([key,val])=>{
+      const el=document.getElementById('plays-'+key);
+      if(el) el.textContent=Number(val).toLocaleString()+' plays';
+    });
   }catch(e){}
 }
 
-// Load games first, then play counts
+// Load games from API (replaces hardcoded cards only if API responds)
+// then update play counts
 loadGamesFromAPI().then(()=>loadPlayCounts());
-// Also load play counts separately for static cards
-loadPlayCounts();
+loadPlayCounts(); // also run immediately for hardcoded cards
 
 /* Load ticker from API */
 async function loadTicker(){
