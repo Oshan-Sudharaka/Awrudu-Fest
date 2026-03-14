@@ -32,6 +32,7 @@ const LB = mongoose.model('Leaderboard', new mongoose.Schema({
 const Game = mongoose.model('Game', new mongoose.Schema({
   gameId:{type:String,required:true,unique:true}, name:{type:String,required:true},
   type:{type:String}, icon:{type:String,default:'🎮'}, file:{type:String}, desc:{type:String},
+  players:{type:String,default:'1 Player'},
   status:{type:String,enum:['active','hidden','soon'],default:'active'},
   badge:{type:String}, plays:{type:Number,default:0}, order:{type:Number,default:0},
 },{timestamps:true}));
@@ -87,10 +88,14 @@ async function seedDefaults(){
   }
   if(!await Game.countDocuments()){
     await Game.insertMany([
-      {gameId:'shell',name:'කනා මුට්ටිය',type:'SHELL GAME',icon:'🏺',file:'kana-muttiya.html',status:'active',badge:'HOT',desc:'Pot shuffle game!',order:1},
-      {gameId:'tag',name:'Blind Tag',type:'ACTION TAG',icon:'🙈',file:'kana-muttiya-tag.html',status:'active',badge:'NEW',desc:'Blindfolded tag!',order:2},
-      {gameId:'kotta',name:'කොට්ට පොර',type:'TURN BASED',icon:'🛏️',file:'kotta-pora.html',status:'active',badge:'NEW',desc:'Pillow fight!',order:3},
-      {gameId:'lind',name:'ළිඳ් ඇදීම',type:'TIMING',icon:'🎯',file:'',status:'soon',badge:'SOON',desc:'Coming soon!',order:4},
+      {gameId:'shell', name:'කනා මුට්ටිය',     type:'SHELL GAME',   icon:'🏺',file:'kana-muttiya.html',       status:'active',badge:'HOT', players:'1 Player · Casual',   desc:'Pot shuffle game! Ball සඟවලා — නිවැරදි pot තෝරා ලකුණු ගන්න.',order:1},
+      {gameId:'tag',   name:'Blind Tag',         type:'ACTION TAG',   icon:'🙈',file:'kana-muttiya-tag.html',   status:'active',badge:'NEW', players:'1 vs AI · Action',    desc:'Blindfolded character ගෙන AI runners catch කරන්න!',           order:2},
+      {gameId:'kotta', name:'කොට්ට පොර',       type:'TURN BASED',   icon:'🛏️',file:'kotta-pora.html',        status:'active',badge:'NEW', players:'1 vs AI · Fighting',  desc:'AI ව කොට්ටෙන් combat! Special moves, best of 3.',             order:3},
+      {gameId:'kiriko',name:'කිරිකෝ ඇදීම',    type:'TUG OF WAR',   icon:'🪢',file:'kiri-ko-adeema.html',    status:'active',badge:'NEW', players:'1 vs AI · Fast Tap',  desc:'AI කණ්ඩායමට ඇදීම! 3 වටයෙන් ජය ගන්න.',                         order:4},
+      {gameId:'kanamut',name:'කණමුට්ටි ගැසීම',type:'POT BREAKING',  icon:'🎯',file:'kana-muttiya-gasima.html',status:'active',badge:'NEW', players:'1 Player · Aim',      desc:'ඇස් බැඳ pendulum click කර කාමර කඩාගන්න. 60s!',               order:5},
+      {gameId:'pancha',name:'පංච කෙළිය',       type:'SLINGSHOT',    icon:'🪁',file:'pancha-keliya.html',      status:'active',badge:'NEW', players:'1 Player · Skill',    desc:'Slingshot drag & release! Streak bonus & 3 rounds!',           order:6},
+      {gameId:'rahas', name:'රහස් දඩයම',       type:'TREASURE HUNT',icon:'🧗',file:'rahas-dadayama.html',    status:'active',badge:'NEW', players:'1 Player · Puzzle',   desc:'ඉඟිය කියවා ධජ සොයා ගන්න! 90s ඇතුළත ධජ 5ක්.',                order:7},
+      {gameId:'snake', name:'සර්ප හා ඉණිමං',  type:'BOARD GAME',   icon:'🐍',file:'sarpa-inimang.html',     status:'active',badge:'HOT', players:'1 vs AI · Board',     desc:'සිංහල Snakes & Ladders! AI race කරන්න 🎲',                    order:8},
     ]);
   }
   if(!await Ann.countDocuments()){
@@ -186,7 +191,12 @@ app.post('/api/leaderboard',async(req,res)=>{
   res.status(201).json(await LB.create({name:String(name).slice(0,30),score:Math.round(Number(score)),game,gameLabel:labels[game]||game,avatar:avatar||'🧑',date:new Date().toLocaleDateString('en-LK'),ip:req.ip}));}
   catch(e){res.status(500).json({error:e.message});}
 });
-app.get('/api/games',async(req,res)=>{try{res.json(await Game.find({status:{$ne:'hidden'}}).sort({order:1}));}catch(e){res.status(500).json({error:e.message});}});
+app.get('/api/games',async(req,res)=>{
+  try{
+    const games=await Game.find({status:{$ne:'hidden'}}).sort({order:1}).lean();
+    res.json(games.map(g=>({...g,id:g.gameId})));
+  }catch(e){res.status(500).json({error:e.message});}
+});
 app.get('/api/announcements',async(req,res)=>{try{res.json(await Ann.find({active:true}).sort({order:1}));}catch(e){res.status(500).json({error:e.message});}});
 app.post('/api/play/:game',async(req,res)=>{
   try{const{game}=req.params;await Game.findOneAndUpdate({gameId:game},{$inc:{plays:1}});
@@ -245,9 +255,25 @@ app.delete('/api/admin/users/:id',authAdmin,requireRole('super'),async(req,res)=
 
 // ══ ADMIN CRUD ══
 // Games
-app.get('/api/admin/games',authAdmin,async(req,res)=>{try{res.json(await Game.find().sort({order:1}));}catch(e){res.status(500).json({error:e.message});}});
-app.post('/api/games',authAdmin,async(req,res)=>{try{res.status(201).json(await Game.create({...req.body,gameId:req.body.gameId||'g'+Date.now()}));}catch(e){res.status(500).json({error:e.message});}});
-app.put('/api/games/:id',authAdmin,async(req,res)=>{try{const g=await Game.findOneAndUpdate({gameId:req.params.id},req.body,{new:true});if(!g)return res.status(404).json({error:'Not found'});res.json(g);}catch(e){res.status(500).json({error:e.message});}});
+app.get('/api/admin/games',authAdmin,async(req,res)=>{
+  try{
+    const games=await Game.find().sort({order:1}).lean();
+    res.json(games.map(g=>({...g,id:g.gameId})));
+  }catch(e){res.status(500).json({error:e.message});}
+});
+app.post('/api/games',authAdmin,async(req,res)=>{
+  try{
+    const g=await Game.create({...req.body,gameId:req.body.gameId||req.body.id||'g'+Date.now()});
+    const obj=g.toObject();res.status(201).json({...obj,id:obj.gameId});
+  }catch(e){res.status(500).json({error:e.message});}
+});
+app.put('/api/games/:id',authAdmin,async(req,res)=>{
+  try{
+    const g=await Game.findOneAndUpdate({gameId:req.params.id},req.body,{new:true}).lean();
+    if(!g)return res.status(404).json({error:'Not found'});
+    res.json({...g,id:g.gameId});
+  }catch(e){res.status(500).json({error:e.message});}
+});
 app.delete('/api/games/:id',authAdmin,requireRole('super','admin'),async(req,res)=>{try{await Game.findOneAndDelete({gameId:req.params.id});res.json({ok:true});}catch(e){res.status(500).json({error:e.message});}});
 
 // Leaderboard
