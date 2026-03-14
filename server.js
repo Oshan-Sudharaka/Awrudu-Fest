@@ -86,18 +86,29 @@ async function seedDefaults(){
     await Admin.create({username:'admin',password:await bcrypt.hash('awrudu2026',12),role:'super'});
     console.log('✅ Admin: admin / awrudu2026');
   }
-  if(!await Game.countDocuments()){
-    await Game.insertMany([
-      {gameId:'shell', name:'කනා මුට්ටිය',     type:'SHELL GAME',   icon:'🏺',file:'kana-muttiya.html',       status:'active',badge:'HOT', players:'1 Player · Casual',   desc:'Pot shuffle game! Ball සඟවලා — නිවැරදි pot තෝරා ලකුණු ගන්න.',order:1},
-      {gameId:'tag',   name:'Blind Tag',         type:'ACTION TAG',   icon:'🙈',file:'kana-muttiya-tag.html',   status:'active',badge:'NEW', players:'1 vs AI · Action',    desc:'Blindfolded character ගෙන AI runners catch කරන්න!',           order:2},
-      {gameId:'kotta', name:'කොට්ට පොර',       type:'TURN BASED',   icon:'🛏️',file:'kotta-pora.html',        status:'active',badge:'NEW', players:'1 vs AI · Fighting',  desc:'AI ව කොට්ටෙන් combat! Special moves, best of 3.',             order:3},
-      {gameId:'kiriko',name:'කිරිකෝ ඇදීම',    type:'TUG OF WAR',   icon:'🪢',file:'kiri-ko-adeema.html',    status:'active',badge:'NEW', players:'1 vs AI · Fast Tap',  desc:'AI කණ්ඩායමට ඇදීම! 3 වටයෙන් ජය ගන්න.',                         order:4},
-      {gameId:'kanamut',name:'කණමුට්ටි ගැසීම',type:'POT BREAKING',  icon:'🎯',file:'kana-muttiya-gasima.html',status:'active',badge:'NEW', players:'1 Player · Aim',      desc:'ඇස් බැඳ pendulum click කර කාමර කඩාගන්න. 60s!',               order:5},
-      {gameId:'pancha',name:'පංච කෙළිය',       type:'SLINGSHOT',    icon:'🪁',file:'pancha-keliya.html',      status:'active',badge:'NEW', players:'1 Player · Skill',    desc:'Slingshot drag & release! Streak bonus & 3 rounds!',           order:6},
-      {gameId:'rahas', name:'රහස් දඩයම',       type:'TREASURE HUNT',icon:'🧗',file:'rahas-dadayama.html',    status:'active',badge:'NEW', players:'1 Player · Puzzle',   desc:'ඉඟිය කියවා ධජ සොයා ගන්න! 90s ඇතුළත ධජ 5ක්.',                order:7},
-      {gameId:'snake', name:'සර්ප හා ඉණිමං',  type:'BOARD GAME',   icon:'🐍',file:'sarpa-inimang.html',     status:'active',badge:'HOT', players:'1 vs AI · Board',     desc:'සිංහල Snakes & Ladders! AI race කරන්න 🎲',                    order:8},
-    ]);
+  // Upsert all 8 games — adds missing ones, updates existing (preserves plays count)
+  const GAMES_SEED=[
+    {gameId:'shell',  name:'කනා මුට්ටිය',    type:'SHELL GAME',    icon:'🏺', file:'kana-muttiya.html',        status:'active',badge:'HOT',players:'1 Player · Casual',   desc:'Pot shuffle game! Ball සඟවලා — නිවැරදි pot තෝරා ලකුණු ගන්න.',order:1},
+    {gameId:'tag',    name:'Blind Tag',        type:'ACTION TAG',    icon:'🙈', file:'kana-muttiya-tag.html',    status:'active',badge:'NEW',players:'1 vs AI · Action',    desc:'Blindfolded character ගෙන AI runners catch කරන්න!',           order:2},
+    {gameId:'kotta',  name:'කොට්ට පොර',      type:'TURN BASED',    icon:'🛏️',file:'kotta-pora.html',          status:'active',badge:'NEW',players:'1 vs AI · Fighting',  desc:'AI ව කොට්ටෙන් combat! Special moves, best of 3.',             order:3},
+    {gameId:'kiriko', name:'කිරිකෝ ඇදීම',   type:'TUG OF WAR',    icon:'🪢', file:'kiri-ko-adeema.html',      status:'active',badge:'NEW',players:'1 vs AI · Fast Tap',  desc:'AI කණ්ඩායමට ඇදීම! 3 වටයෙන් ජය ගන්න.',                        order:4},
+    {gameId:'kanamut',name:'කණමුට්ටි ගැසීම', type:'POT BREAKING',  icon:'🎯', file:'kana-muttiya-gasima.html', status:'active',badge:'NEW',players:'1 Player · Aim',      desc:'ඇස් බැඳ pendulum click කර කාමර කඩාගන්න. 60s!',              order:5},
+    {gameId:'pancha', name:'පංච කෙළිය',      type:'SLINGSHOT',     icon:'🪁', file:'pancha-keliya.html',        status:'active',badge:'NEW',players:'1 Player · Skill',    desc:'Slingshot drag & release! Streak bonus & 3 rounds!',          order:6},
+    {gameId:'rahas',  name:'රහස් දඩයම',      type:'TREASURE HUNT', icon:'🧗', file:'rahas-dadayama.html',      status:'active',badge:'NEW',players:'1 Player · Puzzle',   desc:'ඉඟිය කියවා ධජ සොයා ගන්න! 90s ඇතුළත ධජ 5ක්.',               order:7},
+    {gameId:'snake',  name:'සර්ප හා ඉණිමං', type:'BOARD GAME',    icon:'🐍', file:'sarpa-inimang.html',        status:'active',badge:'HOT',players:'1 vs AI · Board',     desc:'සිංහල Snakes & Ladders! AI race කරන්න 🎲',                   order:8},
+  ];
+  for(const g of GAMES_SEED){
+    await Game.findOneAndUpdate(
+      {gameId:g.gameId},
+      {$set:{name:g.name,type:g.type,icon:g.icon,file:g.file,
+             badge:g.badge,players:g.players,desc:g.desc,order:g.order},
+       $setOnInsert:{status:g.status,plays:0}},
+      {upsert:true,new:true}
+    );
   }
+  // Remove old placeholder game (ළිඳ් ඇදීම / lind) if present
+  await Game.deleteOne({gameId:'lind'});
+  console.log('✅ Games: 8 games upserted');
   if(!await Ann.countDocuments()){
     await Ann.insertMany([
       {text:'🎊 AwruduFest.lk — සිංහල හා දෙමළ අලුත් අවුරුදු 2026 Platform!',tag:'NEW',order:1},
