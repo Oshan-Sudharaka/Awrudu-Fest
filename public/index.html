@@ -289,7 +289,8 @@ nav.solid{
 ═══════════════════════════════════════ */
 .games-section{text-align:center;}
 .games-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(270px,45vw),1fr));
   gap:22px;margin-top:52px;
 }
 .gcard{
@@ -752,22 +753,64 @@ footer{
 @media(max-width:520px){.hub-grid{grid-template-columns:1fr;}.hub-card{padding:26px 18px 22px;}}
 
 @media(max-width:980px){
-  nav{padding:12px 24px;}
+  nav{padding:12px 20px;}
   .nav-center{display:none;}
   .nav-ham{display:block;}
   .about-grid{grid-template-columns:1fr;}
   .footer-grid{grid-template-columns:1fr 1fr;}
+  .games-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
+  .hub-grid{grid-template-columns:1fr 1fr;}
+  .nak-cards{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}
+}
+@media(max-width:700px){
+  .games-grid{grid-template-columns:repeat(2,1fr);gap:12px;margin-top:30px;}
+  .gcard-title{font-size:1.05rem;}
+  .gcard-desc{font-size:.72rem;margin-bottom:12px;}
+  .gcard-body{padding:14px 14px 16px;}
+  .gcard-btn{font-size:.75rem;padding:9px 14px;}
+  .hub-grid{grid-template-columns:1fr 1fr;gap:14px;}
+  .lb-tabs{gap:5px;}
+  .lb-tab{font-size:.65rem;padding:7px 10px;}
+  .nak-cards{grid-template-columns:repeat(3,1fr);gap:10px;}
 }
 @media(max-width:600px){
-  .hero-stats{gap:28px;}
+  .hero-stats{gap:18px;flex-wrap:wrap;}
+  .hero-stats>div{min-width:80px;}
   .footer-grid{grid-template-columns:1fr;}
-  .cd-grid{gap:10px;}
-  .cd-box{padding:16px 20px;min-width:80px;}
-  .cd-n{font-size:2.4rem;}
-  section,.section{padding:65px 16px;}
-  nav{padding:10px 16px;}
-  .nl-box{padding:36px 22px;}
-  footer{padding:50px 20px 28px;}
+  .cd-grid{gap:8px;}
+  .cd-box{padding:12px 14px;min-width:64px;}
+  .cd-n{font-size:2rem;}
+  .cd-l{font-size:.55rem;}
+  section,.section{padding:52px 14px;}
+  nav{padding:10px 14px;}
+  .nl-box{padding:28px 18px;}
+  footer{padding:44px 16px 24px;}
+  .s-title{font-size:clamp(2rem,8vw,3.2rem);}
+  .s-sub{font-size:clamp(1.05rem,4vw,1.4rem);}
+  .s-desc{font-size:.85rem;}
+}
+@media(max-width:480px){
+  .games-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .gcard-img{height:120px;}
+  .gcard-icon{font-size:2.6rem;}
+  .gcard-title{font-size:.95rem;}
+  .gcard-body{padding:12px 12px 14px;}
+  .gcard-desc{display:none;}
+  .gcard-btn{font-size:.72rem;padding:8px 12px;}
+  .hub-grid{grid-template-columns:1fr 1fr;}
+  .hub-card{padding:20px 14px 16px;}
+  .hub-icon{font-size:2rem;}
+  .hub-title{font-size:1rem;}
+  .hub-desc{display:none;}
+  .nak-cards{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .nt-name{font-size:.7rem;}
+  .nt-time{font-size:1rem;}
+  .nt-date{font-size:.6rem;}
+  .lb-tabs{gap:4px;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;}
+  .lb-tab{font-size:.6rem;padding:6px 9px;white-space:nowrap;flex-shrink:0;}
+  .nav-play{display:none;}
+  .logo-main{font-size:.85rem;}
+  .logo-sub{font-size:.48rem;}
 }
 </style>
 </head>
@@ -783,12 +826,12 @@ footer{
 <div class="ticker" id="ticker">
   <div class="ticker-inner" id="tickerInner">
     <span class="ticker-item"><span class="ticker-tag">NEW</span>🎊 AwruduFest by Feature Designz — Complete Avurudu Platform!</span>
-    <span class="ticker-item"><span class="ticker-tag">NAK</span>☸ April 14 · 7:23 AM — ශුභ ස්නාන නැකත! Full Nakath Sheet available!</span>
+    <span class="ticker-item"><span class="ticker-tag">NAK</span>☸ April 14 · 9:32 AM — සිංහල අලුත් අවුරුද්ද 2026! Official Nakath times!</span>
     <span class="ticker-item"><span class="ticker-tag">LIVE</span>🎮 කොට්ට පොර · කනා මුට්ටිය · Blind Tag — Play Now!</span>
     <span class="ticker-item"><span class="ticker-tag">HOT</span>🍛 Recipes — කිරිබත්, කොකිස්, අල්වා, ඉදිඅප්ප Step-by-Step!</span>
     <span class="ticker-item"><span class="ticker-tag">NEW</span>💌 සුබ පැතුම් Generator — Card හදාගෙන Share!</span>
     <span class="ticker-item"><span class="ticker-tag">NEW</span>🎊 AwruduFest by Feature Designz — Complete Avurudu Platform!</span>
-    <span class="ticker-item"><span class="ticker-tag">NAK</span>☸ April 14 · 7:23 AM — ශුභ ස්නාන නැකත! Full Nakath Sheet available!</span>
+    <span class="ticker-item"><span class="ticker-tag">NAK</span>☸ April 14 · 9:32 AM — සිංහල අලුත් අවුරුද්ද 2026! Official Nakath times!</span>
     <span class="ticker-item"><span class="ticker-tag">LIVE</span>🎮 කොට්ට පොර · කනා මුට්ටිය · Blind Tag — Play Now!</span>
     <span class="ticker-item"><span class="ticker-tag">HOT</span>🍛 Recipes — කිරිබත්, කොකිස්, අල්වා, ඉදිඅප්ප Step-by-Step!</span>
     <span class="ticker-item"><span class="ticker-tag">NEW</span>💌 සුබ පැතුම් Generator — Card හදාගෙන Share!</span>
@@ -911,7 +954,7 @@ footer{
       <span class="hub-pill">🎮 LIVE GAMES</span>
       <span class="hub-name">අවුරුදු ක්‍රීඩා</span>
       <p class="hub-desc">කනා මුට්ටිය, කොට්ට පොර, Blind Tag — 3 games live! Leaderboard ජය ගෙන friends challenge!</p>
-      <span class="hub-btn">ෙකළිය ▶</span>
+      <span class="hub-btn">▶ Play</span>
     </a>
     <a href="recipes.html" class="hub-card hub-recipes">
       <span class="hub-icon">🍛</span>
@@ -938,12 +981,12 @@ footer{
     <p class="nak-strip-sub">සම්පූර්ණ නැකත් සීට්ටුව සඳහා <a href="nakath.html">click කරන්න →</a></p>
   </div>
   <div class="nak-cards">
-    <div class="nak-t"><span class="nt-icon">🌅</span><div class="nt-name">අවුරුද්ද ආරම්භ</div><span class="nt-time">ප.ව. 7:23</span><div class="nt-date">Apr 14 · Tuesday</div></div>
-    <div class="nak-t next"><span class="nt-icon">🛁</span><div class="nt-name">ශුභ ස්නානය</div><span class="nt-time">පෙ.ව. 7:23</span><div class="nt-date">Apr 14 · Tuesday</div></div>
-    <div class="nak-t"><span class="nt-icon">🔥</span><div class="nt-name">ගිනි මැළවීම</div><span class="nt-time">පෙ.ව. 8:05</span><div class="nt-date">Apr 14 · Tuesday</div></div>
-    <div class="nak-t"><span class="nt-icon">🍚</span><div class="nt-name">කිරිබත් / කෑම</div><span class="nt-time">පෙ.ව. 10:22</span><div class="nt-date">Apr 14 · Tuesday</div></div>
-    <div class="nak-t"><span class="nt-icon">🚗</span><div class="nt-name">ශුභ ගමන</div><span class="nt-time">ප.ව. 2:47</span><div class="nt-date">Apr 14 · Tuesday</div></div>
-    <div class="nak-t"><span class="nt-icon">💼</span><div class="nt-name">රැකී රක්ෂා</div><span class="nt-time">ප.ව. 4:08</span><div class="nt-date">Apr 14 · Tuesday</div></div>
+    <div class="nak-t next"><span class="nt-icon">🌅</span><div class="nt-name">අලුත් අවුරුද්ද</div><span class="nt-time">09:32 AM</span><div class="nt-date">Apr 14 · Tuesday</div></div>
+    <div class="nak-t"><span class="nt-icon">🔥</span><div class="nt-name">ලිප දැල්වීම</div><span class="nt-time">11:08 AM</span><div class="nt-date">Apr 5 · Sunday</div></div>
+    <div class="nak-t"><span class="nt-icon">☸️</span><div class="nt-name">පුණ්‍ය කාලය</div><span class="nt-time">03:08 – 03:56</span><div class="nt-date">Apr 14 · Tuesday</div></div>
+    <div class="nak-t"><span class="nt-icon">🍚</span><div class="nt-name">ආහාර පිසීම</div><span class="nt-time">10:51 AM</span><div class="nt-date">Apr 14 · Tuesday</div></div>
+    <div class="nak-t"><span class="nt-icon">💆</span><div class="nt-name">හිසතෙල් ගෑම</div><span class="nt-time">06:55 AM</span><div class="nt-date">Apr 15 · Wednesday</div></div>
+    <div class="nak-t"><span class="nt-icon">💼</span><div class="nt-name">රැකිරක්ෂා</div><span class="nt-time">06:27 AM</span><div class="nt-date">Apr 20 · Monday</div></div>
   </div>
   <div class="nak-strip-cta">
     <a href="nakath.html" class="nak-cta-btn">☸ සම්පූර්ණ නැකත් සීට්ටුව — FULL SHEET →</a>
@@ -973,7 +1016,7 @@ footer{
         <p class="gcard-desc">Pot shuffle game! Ball සඟවලා — නිවැරදි pot තෝරා ලකුණු ගන්න. 3 difficulty levels, special bonuses!</p>
         <div class="gcard-foot">
           <span class="gcard-meta">👤 1 Player · Casual</span>
-          <button class="gcard-btn" onclick="launchGame('shell')">ෙකළිය ▶</button>
+          <button class="gcard-btn" onclick="launchGame('shell')">▶ Play</button>
         </div>
       </div>
     </div>
@@ -990,7 +1033,7 @@ footer{
         <p class="gcard-desc">Blindfolded character ගෙන AI runners catch කරන්න! Mouse, Arrow Keys, D-Pad controls. 6 Levels!</p>
         <div class="gcard-foot">
           <span class="gcard-meta">👤 1 vs AI · Action</span>
-          <button class="gcard-btn" onclick="launchGame('tag')">ෙකළිය ▶</button>
+          <button class="gcard-btn" onclick="launchGame('tag')">▶ Play</button>
         </div>
       </div>
     </div>
@@ -1007,7 +1050,7 @@ footer{
         <p class="gcard-desc">AI ව කොට්ටෙන් Turn-by-turn combat! Detailed characters, special moves, best of 3, leaderboard!</p>
         <div class="gcard-foot">
           <span class="gcard-meta">👤 1 vs AI · Fighting</span>
-          <button class="gcard-btn" onclick="launchGame('kotta')">ෙකළිය ▶</button>
+          <button class="gcard-btn" onclick="launchGame('kotta')">▶ Play</button>
         </div>
       </div>
     </div>
@@ -1024,7 +1067,7 @@ footer{
         <p class="gcard-desc">AI කණ්ඩායමට එරෙහිව ශක්තිමත් ලෙස ඇදීම! ඉක්මනින් tap කර 3 වටයෙන් ජය ගන්න!</p>
         <div class="gcard-foot">
           <span class="gcard-meta">👤 1 vs AI · Fast Tap</span>
-          <button class="gcard-btn" onclick="launchGame('kiriko')">ෙකළිය ▶</button>
+          <button class="gcard-btn" onclick="launchGame('kiriko')">▶ Play</button>
         </div>
       </div>
     </div>
@@ -1041,7 +1084,7 @@ footer{
         <p class="gcard-desc">ඇස් බැඳ ගෙස්ම! ගමන් කරන pendulum ළඟ click කර කාමර කඩාගන්න. 60s challenge!</p>
         <div class="gcard-foot">
           <span class="gcard-meta">👤 1 Player · Aim</span>
-          <button class="gcard-btn" onclick="launchGame('kanamut')">ෙකළිය ▶</button>
+          <button class="gcard-btn" onclick="launchGame('kanamut')">▶ Play</button>
         </div>
       </div>
     </div>
@@ -1058,7 +1101,7 @@ footer{
         <p class="gcard-desc">Slingshot drag & release! ගමන් කරන ඉලක්ක hit කරන්න. Streak bonus & 3 rounds!</p>
         <div class="gcard-foot">
           <span class="gcard-meta">👤 1 Player · Skill</span>
-          <button class="gcard-btn" onclick="launchGame('pancha')">ෙකළිය ▶</button>
+          <button class="gcard-btn" onclick="launchGame('pancha')">▶ Play</button>
         </div>
       </div>
     </div>
@@ -1075,7 +1118,7 @@ footer{
         <p class="gcard-desc">ඉඟිය කියවා සැඟවුණු ධජය සොයා ගන්න! 90s ඇතුළත ධජ 5ක් hunt කරන්න 🏳️</p>
         <div class="gcard-foot">
           <span class="gcard-meta">👤 1 Player · Puzzle</span>
-          <button class="gcard-btn" onclick="launchGame('rahas')">ෙකළිය ▶</button>
+          <button class="gcard-btn" onclick="launchGame('rahas')">▶ Play</button>
         </div>
       </div>
     </div>
@@ -1092,7 +1135,7 @@ footer{
         <p class="gcard-desc">සිංහල Snakes & Ladders! AI එක්ක dice ගසා board race කරන්න. සාම්ප්‍රදායික design! 🎲</p>
         <div class="gcard-foot">
           <span class="gcard-meta">👤 1 vs AI · Board</span>
-          <button class="gcard-btn" onclick="launchGame('snake')">ෙකළිය ▶</button>
+          <button class="gcard-btn" onclick="launchGame('snake')">▶ Play</button>
         </div>
       </div>
     </div>
@@ -1107,9 +1150,14 @@ footer{
   <p class="s-desc">ශ්‍රේෂ්ඨ ජයග්‍රාහකයෝ. ඔබේ score ජය ගන්නද? Games play කර leaderboard ඉහළ නගින්න!</p>
   <div class="lb-tabs">
     <button class="lb-tab active" onclick="switchLB('all',this)">සියල්ල</button>
-    <button class="lb-tab" onclick="switchLB('shell',this)">කනා මුට්ටිය</button>
-    <button class="lb-tab" onclick="switchLB('tag',this)">Blind Tag</button>
-    <button class="lb-tab" onclick="switchLB('kotta',this)">කොට්ට පොර</button>
+    <button class="lb-tab" onclick="switchLB('shell',this)">🏺 කනා</button>
+    <button class="lb-tab" onclick="switchLB('tag',this)">🙈 Tag</button>
+    <button class="lb-tab" onclick="switchLB('kotta',this)">🛏️ කොට්ට</button>
+    <button class="lb-tab" onclick="switchLB('kiriko',this)">🪢 කිරිකෝ</button>
+    <button class="lb-tab" onclick="switchLB('kanamut',this)">🎯 කණ</button>
+    <button class="lb-tab" onclick="switchLB('pancha',this)">🪁 පංච</button>
+    <button class="lb-tab" onclick="switchLB('rahas',this)">🧗 රහස්</button>
+    <button class="lb-tab" onclick="switchLB('snake',this)">🐍 සර්ප</button>
   </div>
   <div class="lb-card">
     <div class="lb-head"><span>#</span><span>ක්‍රීඩකයා</span><span>ක්‍රීඩාව</span><span style="text-align:right">ලකුණු</span></div>
@@ -1152,7 +1200,7 @@ footer{
       <a href="#" class="soc-btn wa" onclick="whatsappShare();return false"><span class="soc-ico">💬</span><div><div class="soc-name">WhatsApp</div><div class="soc-handle">Share Now</div></div></a>
     </div>
     <div class="share-bar reveal">
-      <span class="share-url" id="shareUrl">awrudu.featuredesignz.lk</span>
+      <span class="share-url" id="shareUrl">awrudu.featuredesignz.site</span>
       <button class="share-btn" onclick="copyLink()">📋 Copy Link</button>
       <button class="share-btn wa" onclick="whatsappShare()">💬 WhatsApp</button>
       <button class="share-btn" onclick="shareWebsite()" style="background:linear-gradient(135deg,#1DA1F2,#0d8cd1);color:#fff">🐦 Share</button>
@@ -1176,12 +1224,12 @@ footer{
     <div class="ccard">
       <span class="ccard-ico">📞</span>
       <div class="ccard-label">PHONE / WHATSAPP</div>
-      <div class="ccard-val"><a class="contact-phone" href="tel:+94771234567">+94 77 123 4567</a></div>
+      <div class="ccard-val"><a class="contact-phone" href="tel:+94771234567">+94 786 675 150</a></div>
     </div>
     <div class="ccard">
       <span class="ccard-ico">🌐</span>
       <div class="ccard-label">WEBSITE</div>
-      <div class="ccard-val"><a class="contact-website" href="https://featuredesignz.lk" target="_blank">featuredesignz.lk</a></div>
+      <div class="ccard-val"><a class="contact-website" href="https://featuredesignz.site" target="_blank">featuredesignz.site</a></div>
     </div>
     <div class="ccard">
       <span class="ccard-ico">📍</span>
@@ -1191,19 +1239,19 @@ footer{
   </div>
 
   <div class="social-row" style="margin-top:32px">
-    <a class="soc-pill yt social-yt-link" href="https://youtube.com/@FeatureDesignz" target="_blank">
+    <a class="soc-pill yt social-yt-link" href="https://www.youtube.com/channel/UCda2mc_f-nIinjWpDUJiA2g" target="_blank">
       ▶️ <span><b>YouTube</b><br><span class="yt-handle" style="font-size:.65rem;opacity:.7">@FeatureDesignz</span></span>
     </a>
-    <a class="soc-pill tt social-tt-link" href="https://tiktok.com/@FeatureDesignz" target="_blank">
+    <a class="soc-pill tt social-tt-link" href="https://www.tiktok.com/@featuredesignz" target="_blank">
       🎵 <span><b>TikTok</b><br><span class="tt-handle" style="font-size:.65rem;opacity:.7">@FeatureDesignz</span></span>
     </a>
-    <a class="soc-pill fb social-fb-link" href="https://facebook.com/FeatureDesignz" target="_blank">
+    <a class="soc-pill fb social-fb-link" href="https://www.facebook.com/featuredesignz" target="_blank">
       👍 <span><b>Facebook</b><br><span style="font-size:.65rem;opacity:.7">Feature Designz</span></span>
     </a>
-    <a class="soc-pill ig social-ig-link" href="https://instagram.com/FeatureDesignz" target="_blank">
+    <a class="soc-pill ig social-ig-link" href="https://www.instagram.com/featuredesignz" target="_blank">
       📸 <span><b>Instagram</b><br><span style="font-size:.65rem;opacity:.7">@FeatureDesignz</span></span>
     </a>
-    <a class="soc-pill wa social-wa-link" href="https://wa.me/94771234567" target="_blank">
+    <a class="soc-pill wa social-wa-link" href="https://wa.me/94786675150" target="_blank">
       💬 <span><b>WhatsApp</b><br><span style="font-size:.65rem;opacity:.7">Chat Now</span></span>
     </a>
   </div>
@@ -1235,10 +1283,10 @@ footer{
       </a>
       <p class="footer-brand-desc">සිංහල හා දෙමළ ජනතාවගේ අලුත් අවුරුදු ජනක්‍රීඩා online platform. Feature Designz ගේ නිර්මාණය. Made with ❤️ in Sri Lanka.</p>
       <div class="footer-socials">
-        <a href="https://youtube.com/@FeatureDesignz" class="footer-social-ico social-yt-link" target="_blank">▶️</a>
-        <a href="https://tiktok.com/@FeatureDesignz" class="footer-social-ico social-tt-link" target="_blank">🎵</a>
-        <a href="https://facebook.com/FeatureDesignz" class="footer-social-ico social-fb-link" target="_blank">👍</a>
-        <a href="https://instagram.com/FeatureDesignz" class="footer-social-ico social-ig-link" target="_blank">📸</a>
+        <a href="https://www.youtube.com/channel/UCda2mc_f-nIinjWpDUJiA2g" class="footer-social-ico social-yt-link" target="_blank">▶️</a>
+        <a href="https://www.tiktok.com/@featuredesignz" class="footer-social-ico social-tt-link" target="_blank">🎵</a>
+        <a href="https://www.facebook.com/featuredesignz" class="footer-social-ico social-fb-link" target="_blank">👍</a>
+        <a href="https://www.instagram.com/featuredesignz" class="footer-social-ico social-ig-link" target="_blank">📸</a>
       </div>
     </div>
     <div>
@@ -1254,9 +1302,9 @@ footer{
       <div class="footer-col-title">Feature Designz</div>
       <ul class="footer-links">
         <li><a href="#contact" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact Us 📞</a></li>
-        <li><a href="https://youtube.com/@FeatureDesignz" class="social-yt-link" target="_blank">YouTube ▶️</a></li>
-        <li><a href="https://tiktok.com/@FeatureDesignz" class="social-tt-link" target="_blank">TikTok 🎵</a></li>
-        <li><a href="https://facebook.com/FeatureDesignz" class="social-fb-link" target="_blank">Facebook 👍</a></li>
+        <li><a href="https://www.youtube.com/channel/UCda2mc_f-nIinjWpDUJiA2g" class="social-yt-link" target="_blank">YouTube ▶️</a></li>
+        <li><a href="https://www.tiktok.com/@featuredesignz" class="social-tt-link" target="_blank">TikTok 🎵</a></li>
+        <li><a href="https://www.facebook.com/featuredesignz" class="social-fb-link" target="_blank">Facebook 👍</a></li>
       </ul>
     </div>
     <div>
@@ -1320,7 +1368,7 @@ function closeMob(){document.getElementById('mobMenu').classList.remove('open');
 
 /* ═══════════ COUNTDOWN ═══════════ */
 // 2026 Sinhala New Year: April 14, 2026 at 07:23:00 Sri Lanka Time (UTC+5:30)
-const NAKATH_TARGET = new Date('2026-04-14T07:23:00+05:30');
+const NAKATH_TARGET = new Date('2026-04-14T09:32:00+05:30');
 
 function runCd(){
   const now = new Date();
@@ -1442,7 +1490,7 @@ function renderGamesGrid(games){
           <span class="gcard-meta">👤 ${g.players||'1 Player'}</span>
           ${isSoon
             ? `<button class="gcard-btn" disabled style="opacity:.4">Coming Soon</button>`
-            : `<button class="gcard-btn" onclick="launchGame('${key}')">ෙකළිය ▶</button>`
+            : `<button class="gcard-btn" onclick="launchGame('${key}')">▶ Play</button>`
           }
         </div>
       </div>
@@ -1662,7 +1710,7 @@ async function applyTheme(){
 applyTheme();
 
 // Share URL display
-document.getElementById('shareUrl').textContent=location.host||'awrudu.featuredesignz.lk';
+document.getElementById('shareUrl').textContent=location.host||'awrudu.featuredesignz.site';
 </script>
 
 <!-- ═══ FIREWORKS CANVAS ═══ -->

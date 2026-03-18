@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel — Awrudu with Feature Designz</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/icon-512.svg">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Sinhala:wght@400;700&family=Gemunu+Libre:wght@300;400;700;800&family=Yatra+One&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -268,7 +270,13 @@ input[type="color"]{width:36px;height:36px;border:none;border-radius:8px;padding
     <input type="password" class="login-field" id="lgPass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()">🔐 Login</button>
     <div class="login-err" id="lgErr"></div>
-    <div style="margin-top:20px;font-size:.7rem;color:rgba(253,243,220,.2)">Default: admin / awrudu2025</div>
+    <div style="margin-top:18px;padding:10px 14px;border-radius:8px;background:rgba(212,160,23,.06);border:1px solid rgba(212,160,23,.15)">
+      <div style="font-size:.65rem;color:rgba(253,243,220,.4);letter-spacing:1px;margin-bottom:5px">LOGIN CREDENTIALS</div>
+      <div style="font-size:.75rem;color:rgba(253,243,220,.55);line-height:1.7">
+        👤 <strong style="color:var(--gold-lt)">featuredesignz</strong><br>
+        🔑 <strong style="color:var(--gold-lt)">oshan1111</strong>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -442,9 +450,14 @@ input[type="color"]{width:36px;height:36px;border:none;border-radius:8px;padding
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
         <select class="f-select" id="lb-filter-game" style="width:auto;padding:7px 14px" onchange="loadAdminLB()">
           <option value="">All Games</option>
-          <option value="shell">කනා මුට්ටිය</option>
-          <option value="tag">Blind Tag</option>
-          <option value="kotta">කොට්ට පොර</option>
+          <option value="shell">🏺 කනා මුට්ටිය</option>
+          <option value="tag">🙈 Blind Tag</option>
+          <option value="kotta">🛏️ කොට්ට පොර</option>
+          <option value="kiriko">🪢 කිරිකෝ ඇදීම</option>
+          <option value="kanamut">🎯 කණමුට්ටි ගැසීම</option>
+          <option value="pancha">🪁 පංච කෙළිය</option>
+          <option value="rahas">🧗 රහස් දඩයම</option>
+          <option value="snake">🐍 සර්ප හා ඉණිමං</option>
         </select>
         <input class="f-input" id="lb-search" placeholder="Search player..." style="width:auto;flex:1;max-width:260px" oninput="loadAdminLB()">
       </div>
