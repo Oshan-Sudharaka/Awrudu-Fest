@@ -35,12 +35,54 @@
   .emoji-big { font-size:60px;margin-bottom:16px; }
   #hint-btn { position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:30;background:rgba(0,0,0,0.7);border:2px solid var(--gold);color:var(--gold);padding:10px 28px;border-radius:30px;font-family:'Noto Sans Sinhala',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s; }
   #hint-btn:hover { background:var(--gold);color:#000; }
+
+/* ── AwruduFest Back Button ── */
+.awrudu-back {
+  position: fixed;
+  top: 14px; left: 14px;
+  z-index: 9999;
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(10,5,0,0.82);
+  border: 1.5px solid #F5C842;
+  color: #F5C842;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-family: 'Noto Serif Sinhala', 'Noto Sans Sinhala', serif;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.22s;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.45);
+}
+.awrudu-back:hover {
+  background: #F5C842;
+  color: #0A0500;
+  transform: translateX(-2px);
+  box-shadow: 0 4px 20px rgba(245,200,66,0.35);
+}
+.awrudu-back svg {
+  width: 14px; height: 14px; flex-shrink: 0;
+}
+@media(max-width:480px){
+  .awrudu-back { font-size:11px; padding:7px 12px; top:10px; left:10px; gap:5px; }
+}
+
+
+/* ── Mobile Responsive (Canvas Games) ── */
+@media(max-width:600px){
+  canvas { touch-action: none; }
+}
+
 </style>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
 <canvas id="particle-canvas"></canvas>
-<a href="/kotta-pora.html" class="back-btn">← AwruduFest</a>
+<a href="/index.html" class="back-btn">← AwruduFest</a>
 <div id="ui">
   <div class="game-title">🧗 රහස් දඩයම</div>
   <div class="hud">

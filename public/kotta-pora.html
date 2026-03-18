@@ -108,9 +108,57 @@ body{
 .snd.muted{opacity:.35;}
 .vfx{position:absolute;pointer-events:none;z-index:55;font-family:'Yatra One',cursive;font-weight:700;animation:vRise 1.1s ease-out forwards;}
 @keyframes vRise{0%{transform:translateY(0) scale(1.3);opacity:1;}100%{transform:translateY(-78px) scale(.15);opacity:0;}}
+
+/* ── AwruduFest Back Button ── */
+.awrudu-back {
+  position: fixed;
+  top: 14px; left: 14px;
+  z-index: 9999;
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(10,5,0,0.82);
+  border: 1.5px solid #F5C842;
+  color: #F5C842;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-family: 'Noto Serif Sinhala', 'Noto Sans Sinhala', serif;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.22s;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.45);
+}
+.awrudu-back:hover {
+  background: #F5C842;
+  color: #0A0500;
+  transform: translateX(-2px);
+  box-shadow: 0 4px 20px rgba(245,200,66,0.35);
+}
+.awrudu-back svg {
+  width: 14px; height: 14px; flex-shrink: 0;
+}
+@media(max-width:480px){
+  .awrudu-back { font-size:11px; padding:7px 12px; top:10px; left:10px; gap:5px; }
+}
+
+
+/* ── Mobile Responsive (Canvas Games) ── */
+@media(max-width:600px){
+  canvas { touch-action: none; }
+}
+
 </style>
 </head>
 <body>
+<a href="/index.html" class="awrudu-back">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <polyline points="15 18 9 12 15 6"></polyline>
+  </svg>
+  AwruduFest
+</a>
 <button class="snd" id="sndBtn" onclick="toggleSnd()">🔊</button>
 
 <div class="top-bar">

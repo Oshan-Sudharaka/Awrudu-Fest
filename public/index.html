@@ -380,7 +380,7 @@ nav.solid{
    LEADERBOARD
 ═══════════════════════════════════════ */
 .lb-section{text-align:center;}
-.lb-tabs{display:flex;gap:8px;justify-content:center;margin:36px 0 0;flex-wrap:wrap;}
+.lb-tabs{display:flex;gap:6px;justify-content:center;margin:36px 0 0;flex-wrap:wrap;overflow-x:auto;padding-bottom:4px;}
 .lb-tab{
   font-family:'Gemunu Libre',cursive;font-size:.75rem;letter-spacing:1.5px;
   padding:8px 20px;border-radius:50px;border:1px solid var(--border);
@@ -545,17 +545,27 @@ footer{
 }
 .modal-nav{
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 20px;border-bottom:1px solid var(--border);
-  background:rgba(10,5,0,.95);flex-shrink:0;
+  padding:10px 16px;border-bottom:1px solid var(--border);
+  background:rgba(10,5,0,.97);flex-shrink:0;
+  min-height:48px;
 }
-.modal-title{font-family:'Yatra One',cursive;font-size:1.05rem;color:var(--gold-lt);}
+.modal-title{
+  font-family:'Yatra One',cursive;font-size:1rem;color:var(--gold-lt);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60vw;
+}
 .modal-close{
-  font-family:'Gemunu Libre',cursive;font-size:.78rem;letter-spacing:1.5px;
-  padding:8px 20px;border-radius:50px;border:1px solid var(--border);
-  background:transparent;color:var(--gold);transition:all .2s;
+  font-family:'Gemunu Libre',cursive;font-size:.78rem;letter-spacing:1px;
+  padding:8px 18px;border-radius:50px;border:1.5px solid rgba(212,160,23,.45);
+  background:rgba(212,160,23,.08);color:var(--gold);transition:all .2s;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;
 }
-.modal-close:hover{background:rgba(212,160,23,.1);border-color:var(--border2);}
+.modal-close:hover{background:rgba(212,160,23,.18);border-color:var(--gold);}
 #gameFrame{flex:1;border:none;width:100%;height:100%;}
+@media(max-width:600px){
+  .modal-nav{padding:8px 12px;min-height:44px;}
+  .modal-title{font-size:.85rem;max-width:55vw;}
+  .modal-close{font-size:.72rem;padding:7px 14px;letter-spacing:.5px;}
+}
 
 /* ══════════════════════════════
    CONTACT / SOCIAL SECTION
@@ -811,6 +821,18 @@ footer{
   .nav-play{display:none;}
   .logo-main{font-size:.85rem;}
   .logo-sub{font-size:.48rem;}
+}
+
+/* ── Game Card Mobile Polish ── */
+@media(max-width:600px){
+  .gcard-img{height:130px;}
+  .gcard-icon{font-size:clamp(2.5rem,8vw,3.5rem)!important;}
+  .gcard-plays{font-size:.6rem!important;}
+}
+@media(max-width:380px){
+  .gcard-img{height:110px;}
+  .gcard-title{font-size:.9rem;}
+  .gcard-tag{font-size:.5rem;}
 }
 </style>
 </head>
