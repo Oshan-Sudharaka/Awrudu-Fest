@@ -82,9 +82,14 @@ const setKV=async(key,value)=>KV.findOneAndUpdate({key},{value},{upsert:true,new
 
 // ── SEED ──
 async function seedDefaults(){
+  // Create/update admin accounts
+  if(!await Admin.findOne({username:'featuredesignz'})){
+    await Admin.create({username:'featuredesignz',password:await bcrypt.hash('oshan1111',12),role:'super'});
+    console.log('✅ Admin: featuredesignz / oshan1111');
+  }
+  // Keep legacy admin as fallback (update if exists with old pass)
   if(!await Admin.findOne({username:'admin'})){
-    await Admin.create({username:'admin',password:await bcrypt.hash('awrudu2026',12),role:'super'});
-    console.log('✅ Admin: admin / awrudu2026');
+    await Admin.create({username:'admin',password:await bcrypt.hash('awrudu2026',12),role:'admin'});
   }
   // Upsert all 8 games — adds missing ones, updates existing (preserves plays count)
   const GAMES_SEED=[
@@ -122,15 +127,17 @@ async function seedDefaults(){
   if(!await KV.findOne({key:'theme'}))
     await setKV('theme',{gold:'#D4A017',goldLt:'#F5C842',maroon:'#5C0A0A',dark:'#0A0500',cream:'#FDF3DC',orange:'#E8640A'});
 
-  if(!await KV.findOne({key:'social'}))
-    await setKV('social',{
-      youtube:'https://youtube.com/@FeatureDesignz',youtubeHandle:'@FeatureDesignz',
-      tiktok:'https://tiktok.com/@FeatureDesignz',tiktokHandle:'@FeatureDesignz',
-      facebook:'https://facebook.com/FeatureDesignz',
-      instagram:'https://instagram.com/FeatureDesignz',
-      whatsapp:'https://wa.me/94771234567',
-      email:'info@featuredesignz.lk',phone:'+94 77 123 4567',website:'https://featuredesignz.lk',
-    });
+  // Always sync official Feature Designz contact details
+  await setKV('social',{
+    youtube:'https://www.youtube.com/channel/UCda2mc_f-nIinjWpDUJiA2g',youtubeHandle:'@FeatureDesignz',
+    tiktok:'https://www.tiktok.com/@featuredesignz',tiktokHandle:'@featuredesignz',
+    facebook:'https://www.facebook.com/featuredesignz',facebookHandle:'featuredesignz',
+    instagram:'https://www.instagram.com/featuredesignz',instagramHandle:'@featuredesignz',
+    twitter:'https://x.com/featuredesignz',twitterHandle:'@featuredesignz',
+    whatsapp:'https://wa.me/94786675150',whatsappNum:'+94 786 675 150',
+    email:'info@featuredesignz.site',phone:'+94 786 675 150',
+    website:'https://featuredesignz.site',websiteDisplay:'featuredesignz.site',
+  });
 
   if(!await KV.findOne({key:'popup'}))
     await setKV('popup',{
@@ -142,32 +149,33 @@ async function seedDefaults(){
       pillText:'☸ සිංහල අවුරුදු 2026 · AVURUDU 2026 ☸',
       emojis:'🌸 ☸ 🌺',
       showAfterMs:2200,
-      btn1Text:'🎮 ෙකළිය ▶',btn1Link:'#games',
+      btn1Text:'🎮 ▶ Play',btn1Link:'#games',
       btn2Text:'💌 Wish Share',btn2Link:'greetings.html',
     });
 
-  if(!await KV.findOne({key:'nakath2026'}))
-    await setKV('nakath2026',{
+  // Always sync official 2026 nakath data
+  await setKV('nakath2026',{
       year:2026,sinhalaYear:2569,
       mainDate:'April 14, 2026 — Tuesday',mainDateSi:'අප්‍රේල් 14 — අඟහරුවාදා',
-      mainTime:'07:23 AM',lagna:'මේෂ',direction:'ඊශාන',
+      mainTime:'09:32 AM',lagna:'මේෂ',direction:'ඊශාන',
       nakathTimes:[
-        {id:'newyr',icon:'🌅',si:'අවුරුද්ද ආරම්භ',en:'New Year',time:'ප.ව. 7:23',date:'Apr 13 · Monday',next:false},
-        {id:'bath',icon:'🛁',si:'ශුභ ස්නානය',en:'Ritual Bath',time:'පෙ.ව. 7:23',date:'Apr 14 · Tuesday',next:true},
-        {id:'fire',icon:'🔥',si:'ගිනි මැළවීම',en:'Lighting Hearth',time:'පෙ.ව. 8:05',date:'Apr 14 · Tuesday',next:false},
-        {id:'kiribath',icon:'🍚',si:'කිරිබත් / කෑම',en:'First Meal',time:'පෙ.ව. 10:22',date:'Apr 14 · Tuesday',next:false},
-        {id:'travel',icon:'🚗',si:'ශුභ ගමන',en:'Auspicious Travel',time:'ප.ව. 2:47',date:'Apr 14 · Tuesday',next:false},
-        {id:'work',icon:'💼',si:'රැකී රක්ෂා',en:'Work & Business',time:'ප.ව. 4:08',date:'Apr 15 · Wednesday',next:false},
+        {id:'newyr',icon:'🌅',si:'අවුරුද්ද ආරම්භ',en:'New Year',time:'09:32 AM',date:'Apr 14 · Tuesday',next:true},
+        {id:'bath',icon:'🛁',si:'ශුභ ස්නානය',en:'Ritual Bath',time:'09:32 AM',date:'Apr 14 · Tuesday',next:true},
+        {id:'fire',icon:'🔥',si:'ගිනි මැළවීම',en:'Lighting Hearth',time:'11:08 AM',date:'Apr 14 · Tuesday',next:false},
+        {id:'kiribath',icon:'🍚',si:'කිරිබත් / කෑම',en:'First Meal',time:'10:51 AM',date:'Apr 14 · Tuesday',next:false},
+        {id:'travel',icon:'🚗',si:'ශුභ ගමන',en:'Auspicious Travel',time:'06:27 AM',date:'Apr 14 · Tuesday',next:false},
+        {id:'work',icon:'💼',si:'රැකී රක්ෂා',en:'Work & Business',time:'06:50 AM',date:'Apr 15 · Wednesday',next:false},
       ],
     });
 
-  if(!await KV.findOne({key:'contact'}))
-    await setKV('contact',{
-      teamName:'Feature Designz Team',
-      description:'සිංහල හා දෙමළ ජනතාවගේ නව වර්ෂ Platform. Made with ❤️ in Sri Lanka.',
-      email:'info@featuredesignz.lk',phone:'+94 77 123 4567',
-      whatsapp:'+94771234567',website:'featuredesignz.lk',location:'Sri Lanka 🇱🇰',founded:'2025',
-    });
+  // Always sync official contact
+  await setKV('contact',{
+    teamName:'Feature Designz',
+    description:'Web · Mobile · Design · Video. Made with ❤️ in Sri Lanka 🇱🇰',
+    email:'info@featuredesignz.site',phone:'+94 786 675 150',
+    whatsapp:'+94786675150',website:'https://featuredesignz.site',
+    websiteDisplay:'featuredesignz.site',location:'Sri Lanka 🇱🇰',founded:'2023',
+  });
 
   if(!await KV.findOne({key:'settings'}))
     await setKV('settings',{
@@ -202,6 +210,7 @@ app.post('/api/leaderboard',async(req,res)=>{
   res.status(201).json(await LB.create({name:String(name).slice(0,30),score:Math.round(Number(score)),game,gameLabel:labels[game]||game,avatar:avatar||'🧑',date:new Date().toLocaleDateString('en-LK'),ip:req.ip}));}
   catch(e){res.status(500).json({error:e.message});}
 });
+app.get('/api/health',(_req,res)=>res.json({ok:true,ts:Date.now()}));
 app.get('/api/games',async(req,res)=>{
   try{
     const games=await Game.find({status:{$ne:'hidden'}}).sort({order:1}).lean();
@@ -366,6 +375,9 @@ async function start(){
       console.log(`   🌐 http://localhost:${PORT}`);
       console.log(`   ⚙️  http://localhost:${PORT}/admin.html`);
       console.log(`   Login: admin / awrudu2026\n`);
+      // Self-ping every 4min — prevent Railway sleep
+      const SELF=process.env.RAILWAY_STATIC_URL?`https://${process.env.RAILWAY_STATIC_URL}`:process.env.RENDER_EXTERNAL_URL||`http://localhost:${PORT}`;
+      setInterval(()=>{try{const lib=require(SELF.startsWith('https')?'https':'http');lib.get(`${SELF}/api/health`,r=>console.log(`💓 ping ${r.statusCode}`)).on('error',()=>{});}catch(e){}},4*60*1000);
     });
   }catch(err){console.error('❌',err.message);process.exit(1);}
 }
