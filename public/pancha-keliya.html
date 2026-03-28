@@ -5,7 +5,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/icon-512.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>පංච කෙළිය | AwruduFest 2026</title>
+<title>කැටපොලෙන් විදීම | AwruduFest 2026</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Yatra+One&family=Noto+Sans+Sinhala:wght@400;700;900&display=swap');
   :root { --gold: #FFD700; --deep-gold: #B8860B; --sky1: #1a2a4a; --sky2: #0d1628; }
@@ -79,11 +79,17 @@
 </style>
 </head>
 <body>
+<a href="/index.html" class="awrudu-back">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <polyline points="15 18 9 12 15 6"></polyline>
+  </svg>
+  AwruduFest
+</a>
 <canvas id="bg-canvas"></canvas>
 <canvas id="particle-canvas"></canvas>
 <a href="/index.html" class="back-btn">← AwruduFest</a>
 <div id="ui">
-  <div class="game-title">🪁 පංච කෙළිය</div>
+  <div class="game-title">🪁 කැටපොලෙන් විදීම</div>
   <div class="hud">
     <div class="hud-item"><div class="hud-label">ලකුණු</div><div class="hud-val" id="score">0</div></div>
     <div class="hud-item"><div class="hud-label">වටය</div><div class="hud-val" id="round">1</div></div>
@@ -97,7 +103,7 @@
 <!-- Start -->
 <div class="overlay" id="start-screen">
   <div class="emoji-big">🪁</div>
-  <div class="overlay-title">පංච කෙළිය</div>
+  <div class="overlay-title">කැටපොලෙන් විදීම</div>
   <div class="overlay-sub">Sling shot වලින් ඉලක්ක පහරදෙන්න!<br><strong style="color:var(--gold)">5 ඊතල</strong> ඇතුළත හැකිතාක් ලකුණු ගන්න 🏹</div>
   <button class="overlay-btn" onclick="startGame()">🎮 ආරම්භ කරන්න</button>
 </div>
@@ -107,7 +113,7 @@
   <div class="overlay-title" id="final-title">ජය!</div>
   <div class="overlay-sub" id="final-sub"></div>
   <button class="overlay-btn" onclick="restartGame()">🔄 නැවත</button>
-  <button class="overlay-btn sec" onclick="window.location.href='/kotta-pora.html'">← ආපසු</button>
+  <button class="overlay-btn sec" onclick="window.location.href='/index.html'">← ආපසු</button>
 </div>
 
 <script>
@@ -174,7 +180,7 @@ let score=0,roundNum=1,streak=0,arrowsLeft=5;
 let gameActive=false,lastTime=0;
 let targets=[],projectiles=[],effects=[];
 
-// Slingshot
+// Catapult Shooting
 const sling={
   baseX:0,baseY:0,
   pullX:0,pullY:0,
@@ -219,7 +225,7 @@ function spawnWave(){
   for(let i=0;i<count;i++) setTimeout(()=>spawnTarget(),i*500);
 }
 
-function drawSlingshot(){
+function drawCatapult Shooting(){
   const fx=sling.baseX-18,fy=sling.baseY-20;
   // Fork body
   ctx.strokeStyle='#5D4037';ctx.lineWidth=8;ctx.lineCap='round';
@@ -478,7 +484,7 @@ function loop(ts){
   updateParts();
   ctx.clearRect(0,0,W,H);
   drawTargets(dt);
-  drawSlingshot();
+  drawCatapult Shooting();
   drawProjectiles(dt);
   drawEffects(dt);
 }

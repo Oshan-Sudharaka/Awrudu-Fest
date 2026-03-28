@@ -55,6 +55,8 @@ a{color:inherit;text-decoration:none;}button{cursor:pointer;border:none;outline:
 .bg-id{background:radial-gradient(ellipse at 30% 30%,#003a30,#001510);}
 .bg-pn{background:radial-gradient(ellipse at 30% 30%,#3a2a00,#140e00);}
 .bg-kd{background:radial-gradient(ellipse at 30% 30%,#2a3a4a,#050e18);}
+.bg-ck{background:radial-gradient(ellipse at 30% 30%,#3a1800,#120700);}
+.bg-oj{background:radial-gradient(ellipse at 30% 30%,#3a1a00,#0f0800);}
 .bg-lv{background:radial-gradient(ellipse at 30% 30%,#3a1a2a,#140008);}
 /* modal */
 #recipeModal{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.96);overflow-y:auto;padding:20px;}
@@ -93,7 +95,7 @@ a{color:inherit;text-decoration:none;}button{cursor:pointer;border:none;outline:
 <div class="hero reveal">
   <div class="hero-eyebrow">🍛 RECIPES · වට්ටෝරු</div>
   <h1 class="hero-title">අවුරුදු රසකැවිලි</h1>
-  <p class="hero-desc">සිංහල අවුරුදු සාම්ප්‍රදායික ආහාර — කිරිබත්, කොකිස්, කවුම්, අල්වා!<br>Step-by-step recipes with ingredients in Sinhala & English.</p>
+  <p class="hero-desc">සිංහල අවුරුදු සාම්ප්‍රදායික ආහාර — කිරිබත්, කොකිස්, කැවුම්, අල්වා!<br>Step-by-step recipes with ingredients in Sinhala & English.</p>
 </div>
 
 <div class="cat-bar" id="catBar">
@@ -123,33 +125,32 @@ const R=[
    ing:[{a:'2 cups',n:'Rice flour'}  ,{a:'1 cup',n:'Thick coconut milk'},{a:'1 cup',n:'Water'},{a:'2',n:'Eggs'},{a:'1 tsp',n:'Turmeric'},{a:'1 tsp',n:'Salt'},{a:'3 cups',n:'Coconut oil for frying'}],
    steps:['Mix rice flour, turmeric, salt, eggs and coconut milk into smooth batter.','Add water to get medium-thin consistency.','Heat oil in deep pan until 350°F / hot. Place mold in oil to heat.','Dip hot mold into batter (3/4 submerged). Place in hot oil.','Gently shake mold — kokis should release. Fry until golden.','Drain on paper towels. Repeat until batter is done.'],
    tip:'The mold MUST be very hot before dipping in batter — this is the secret to perfect kokis!'},
-  {id:'kavum',cat:'sweet',icon:'🍩',bg:'bg-kv',title:'කවුම්',en:'Oil Cake (Kavum)',time:'60 min',serves:'25',diff:'Medium',desc:'Traditional Sri Lankan oil cake — golden crispy outside, soft inside. The quintessential Avurudu sweet.',
+  {id:'kavum',cat:'sweet',icon:'🍩',bg:'bg-kv',title:'කැවුම්',en:'Oil Cake (Kavum)',time:'60 min',serves:'25',diff:'Medium',desc:'Traditional Sri Lankan oil cake — golden crispy outside, soft inside. The quintessential Avurudu sweet.',
    ing:[{a:'2 cups',n:'Rice flour (roasted)'}  ,{a:'1 cup',n:'Treacle (Kithul Pani)'},{a:'1 tsp',n:'Turmeric'},{a:'½ tsp',n:'Salt'},{a:'2 cups',n:'Coconut oil for frying'},{a:'¼ cup',n:'Warm water'}],
    steps:['Roast rice flour in dry pan until lightly golden and fragrant.','Mix treacle, turmeric and salt into flour.','Add warm water gradually, knead into soft but firm dough.','Shape into ovals with wet hands (traditional torpedo shape).','Heat coconut oil. Deep fry kavum on medium-low heat.','Fry 8-10 minutes, turning once, until deep golden.'],
    tip:'Use kithul treacle (not sugar) for authentic flavor. Medium-low heat ensures even cooking inside.'},
-  {id:'alwa',cat:'sweet',icon:'🟫',bg:'bg-al',title:'අල්වා',en:'Alwa / Halwa',time:'40 min',serves:'20',diff:'Easy',desc:'Rich, chewy semolina sweet with cashews and cardamom. A beloved Avurudu tradition for all ages.',
-   ing:[{a:'1 cup',n:'Semolina (suji)'}  ,{a:'1 cup',n:'Sugar'},{a:'½ cup',n:'Ghee'},{a:'1 cup',n:'Water'},{a:'½ cup',n:'Cashews (roasted)'},{a:'6',n:'Cardamom pods'},{a:'½ cup',n:'Coconut milk'}],
-   steps:['Dry roast semolina on low heat until golden and fragrant (8 min).','In separate pan, make sugar syrup with water and crushed cardamom.','Add coconut milk to syrup on medium heat.','Slowly add roasted semolina, stirring continuously.','Add ghee gradually until mixture leaves pan sides.','Add cashews. Pour into greased tray. Cool and cut into squares.'],
-   tip:'Never stop stirring! Continuous stirring is the key to smooth, lump-free alwa.'},
+
   {id:'idiappa',cat:'kiribath',icon:'🌀',bg:'bg-id',title:'ඉදිඅප්ප',en:'Idiappa (String Hoppers)',time:'35 min',serves:'4',diff:'Easy',desc:'Delicate steamed rice noodle nests — eaten for breakfast with coconut milk and pol sambol.',
    ing:[{a:'2 cups',n:'Fine rice flour'}  ,{a:'1 tsp',n:'Salt'},{a:'1 cup',n:'Hot water'},{a:'1 tbsp',n:'Coconut oil'}],
    steps:['Mix rice flour and salt. Add hot water gradually, knead into soft dough.','Add coconut oil and knead until smooth and pliable.','Fill idiappa press with dough.','Press onto idiappa mats in circular patterns.','Steam for 8-10 minutes until cooked through.','Serve hot with coconut milk and pol sambol.'],
    tip:'Dough should be soft but not sticky. Use hot water for best texture.'},
-  {id:'paniwalalu',cat:'sweet',icon:'🍭',bg:'bg-pn',title:'පැණිවළළු',en:'Pani Walalu',time:'50 min',serves:'20',diff:'Medium',desc:'Crispy fried ring-shaped sweets dipped in treacle — unique and delicious Avurudu treat.',
-   ing:[{a:'1 cup',n:'Urad dal flour'}  ,{a:'½ cup',n:'Rice flour'},{a:'½ tsp',n:'Salt'},{a:'Water',n:'As needed'},{a:'2 cups',n:'Coconut oil for frying'},{a:'1 cup',n:'Kithul treacle'}],
-   steps:['Mix urad dal flour, rice flour, salt and water into thick batter.','Beat batter until smooth; should pipe easily.','Heat coconut oil. Pipe batter rings directly into hot oil.','Fry until crispy and golden (3-4 min per side).','Remove and drain oil well.','Dip in warm kithul treacle. Serve.'],
-   tip:'Use kithul (palm) treacle for authentic Sri Lankan flavor. The rings must be crispy before dipping.'},
-  {id:'kirithoye',cat:'drink',icon:'🥛',bg:'bg-kd',title:'කිරිතොෙය්',en:'Sweet Coconut Milk Drink',time:'10 min',serves:'4',diff:'Easy',desc:'Fresh coconut milk with jaggery and cardamom — the traditional Avurudu beverage served to guests.',
-   ing:[{a:'2 cups',n:'Fresh coconut milk'}  ,{a:'3 tbsp',n:'Jaggery or kithul treacle'},{a:'3',n:'Cardamom pods (crushed)'},{a:'Pinch',n:'Salt'},{a:'1 cup',n:'Cold water'}],
-   steps:['Extract fresh coconut milk or use canned.','Mix with cold water to dilute slightly.','Add crushed cardamom and pinch of salt.','Stir in jaggery until dissolved.','Taste and adjust sweetness.','Serve chilled in clay cups for authentic taste.'],
-   tip:'Fresh coconut milk is always best! Clay cups add wonderful earthy flavor.'},
-  {id:'lavariya',cat:'sweet',icon:'🫘',bg:'bg-lv',title:'ළවාරිය',en:'Lavariya',time:'55 min',serves:'15',diff:'Medium',desc:'Steamed sweet parcels — rice flour wrapped around coconut and treacle filling in banana leaves.',
+
+
+  {id:'lavariya',cat:'sweet',icon:'🫘',bg:'bg-lv',title:'ළැවරිය',en:'Lavariya (ළැවරිය)',time:'55 min',serves:'15',diff:'Medium',desc:'Steamed sweet parcels — rice flour wrapped around coconut and treacle filling in banana leaves.',
    ing:[{a:'2 cups',n:'Rice flour'}  ,{a:'2 cups',n:'Grated coconut (fresh)'},{a:'½ cup',n:'Kithul treacle'},{a:'½ tsp',n:'Cardamom powder'},{a:'Salt',n:'To taste'},{a:'Banana leaves',n:'For wrapping'}],
    steps:['Mix grated coconut with treacle and cardamom to make filling.','Add boiling water to rice flour and salt, knead into pliable dough.','Divide dough into balls. Flatten each into small circles.','Place filling in center. Fold and seal edges well.','Wrap each in a piece of banana leaf.','Steam for 20-25 minutes until cooked.'],
    tip:'Warm banana leaves before wrapping to make them pliable and to add wonderful flavor!'},
+  {id:'cake',cat:'sweet',icon:'🎂',bg:'bg-ck',title:'කේක්',en:'Sri Lankan Butter Cake',time:'55 min',serves:'12',diff:'Medium',desc:'Soft, moist Sri Lankan butter cake — golden, rich and aromatic. Perfect for Avurudu celebrations and gifting.',
+   ing:[{a:'2 cups',n:'All-purpose flour'},{a:'1 cup',n:'Butter (softened)'},{a:'1 cup',n:'Sugar'},{a:'4',n:'Eggs'},{a:'½ cup',n:'Milk'},{a:'2 tsp',n:'Vanilla extract'},{a:'2 tsp',n:'Baking powder'},{a:'½ tsp',n:'Salt'},{a:'1 tsp',n:'Rose essence (optional)'}],
+   steps:['Preheat oven to 180°C (350°F). Grease and flour a 9-inch cake pan.','Beat softened butter and sugar together until light and fluffy (5-6 min).','Add eggs one at a time, beating well after each addition.','Add vanilla essence and rose essence. Mix well.','Sift flour, baking powder and salt together.','Fold flour mixture into butter mixture alternating with milk — do not over-mix.','Pour into prepared pan. Tap lightly to remove air bubbles.','Bake 40-45 minutes until golden and a skewer comes out clean.','Cool in pan 10 min. Turn out and cool completely before slicing.'],
+   tip:'Room temperature butter and eggs are essential! Cold butter won\'t cream properly. Rose essence gives authentic Sri Lankan flavour.'},
+  {id:'ojuice',cat:'drink',icon:'🍊',bg:'bg-oj',title:'පලතුරු බීම',en:'Fresh Orange Juice',time:'10 min',serves:'4',diff:'Easy',desc:'Fresh squeezed orange juice — bright, refreshing and naturally sweet. The perfect Avurudu celebration drink for all ages.',
+   ing:[{a:'8',n:'Ripe oranges (Sour oranges / Embul dodang)'},{a:'2 tbsp',n:'Sugar or honey (adjust to taste)'},{a:'½ tsp',n:'Salt (tiny pinch)'},{a:'1 cup',n:'Cold water'},{a:'Ice cubes',n:'To serve'},{a:'Mint leaves',n:'For garnish (optional)'}],
+   steps:['Wash oranges well. Roll on counter to loosen juice.','Cut in half and squeeze each orange using a citrus juicer.','Strain juice through fine sieve to remove seeds and pulp.','Add cold water to dilute slightly (or use as-is for stronger flavor).','Add sugar/honey and tiny pinch of salt. Stir until dissolved.','Taste and adjust sweetness.','Serve immediately over ice. Garnish with mint or orange slice.'],
+   tip:'A tiny pinch of salt enhances the sweetness naturally. Sri Lankan sour oranges (embul dodang) give the most authentic tropical flavor!'},
 ];
 
-const CATS={kiribath:{label:'🍚 කිරි ආශ්‍රිත ආහාර',sub:'Milk & Rice based — the most sacred Avurudu foods'},sweet:{label:'🍯 රසකැවිලි',sub:'Traditional sweets — the soul of Avurudu'},fried:{label:'🥙 බදින ලද',sub:'Deep fried delights'},drink:{label:'🥤 බීම / Drinks',sub:'Traditional Avurudu beverages'}};
+const CATS={kiribath:{label:'🍚 කිරි ආශ්‍රිත ආහාර',sub:'Milk & Rice based — the most sacred Avurudu foods'},sweet:{label:'🍯 රසකැවිලි',sub:'Traditional sweets — the soul of Avurudu'},fried:{label:'🥙 බදින ලද',sub:'Deep fried delights'},drink:{label:'🥤 බීම / Drinks',sub:'Fresh & traditional Avurudu beverages'}};
 let CUR='all';
 
 function filterCat(c,btn){CUR=c;document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');render();}

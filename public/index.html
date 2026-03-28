@@ -1084,11 +1084,11 @@ footer{
         <span class="gcard-plays" id="plays-kiriko">-- plays</span>
       </div>
       <div class="gcard-body">
-        <span class="gcard-tag">TUG OF WAR</span>
-        <h3 class="gcard-title">කිරිකෝ ඇදීම</h3>
+        <span class="gcard-tag">ROPE PULL</span>
+        <h3 class="gcard-title">කඹ ඇදීම</h3>
         <p class="gcard-desc">AI කණ්ඩායමට එරෙහිව ශක්තිමත් ලෙස ඇදීම! ඉක්මනින් tap කර 3 වටයෙන් ජය ගන්න!</p>
         <div class="gcard-foot">
-          <span class="gcard-meta">👤 1 vs AI · Fast Tap</span>
+          <span class="gcard-meta">👤 1 vs AI · Rope Pull</span>
           <button class="gcard-btn" onclick="launchGame('kiriko')">▶ Play</button>
         </div>
       </div>
@@ -1118,9 +1118,9 @@ footer{
         <span class="gcard-plays" id="plays-pancha">-- plays</span>
       </div>
       <div class="gcard-body">
-        <span class="gcard-tag">SLINGSHOT</span>
-        <h3 class="gcard-title">පංච කෙළිය</h3>
-        <p class="gcard-desc">Slingshot drag & release! ගමන් කරන ඉලක්ක hit කරන්න. Streak bonus & 3 rounds!</p>
+        <span class="gcard-tag">CATAPULT</span>
+        <h3 class="gcard-title">කැටපොලෙන් විදීම</h3>
+        <p class="gcard-desc">Catapult shoot & release! ගමන් කරන ඉලක්ක hit කරන්න. Streak bonus & 3 rounds!</p>
         <div class="gcard-foot">
           <span class="gcard-meta">👤 1 Player · Skill</span>
           <button class="gcard-btn" onclick="launchGame('pancha')">▶ Play</button>
@@ -1175,7 +1175,7 @@ footer{
     <button class="lb-tab" onclick="switchLB('shell',this)">🏺 කනා</button>
     <button class="lb-tab" onclick="switchLB('tag',this)">🙈 Tag</button>
     <button class="lb-tab" onclick="switchLB('kotta',this)">🛏️ කොට්ට</button>
-    <button class="lb-tab" onclick="switchLB('kiriko',this)">🪢 කිරිකෝ</button>
+    <button class="lb-tab" onclick="switchLB('kiriko',this)">🪢 කඹ ඇදීම</button>
     <button class="lb-tab" onclick="switchLB('kanamut',this)">🎯 කණ</button>
     <button class="lb-tab" onclick="switchLB('pancha',this)">🪁 පංච</button>
     <button class="lb-tab" onclick="switchLB('rahas',this)">🧗 රහස්</button>
@@ -1459,7 +1459,7 @@ let liveGamesData = null;
 // ── Background class map by game type
 const BG_MAP = {
   'SHELL GAME':'tb-shell','ACTION TAG':'tb-tag','TURN BASED':'tb-kotta',
-  'TUG OF WAR':'tb-kiriko','POT BREAKING':'tb-kanamut','SLINGSHOT':'tb-pancha',
+  'ROPE PULL':'tb-kiriko','POT BREAKING':'tb-kanamut','CATAPULT':'tb-pancha',
   'TREASURE HUNT':'tb-rahas','BOARD GAME':'tb-snake',
 };
 
@@ -1558,9 +1558,9 @@ const GAMES={
   shell: {file:'kana-muttiya.html',title:'🏺 කනා මුට්ටිය'},
   tag:   {file:'kana-muttiya-tag.html',title:'🙈 Blind Tag'},
   kotta: {file:'kotta-pora.html',title:'🛏️ කොට්ට පොර'},
-  kiriko:{file:'kiri-ko-adeema.html',title:'🪢 කිරිකෝ ඇදීම'},
+  kiriko:{file:'kiri-ko-adeema.html',title:'🪢 කඹ ඇදීම'},
   kanamut:{file:'kana-muttiya-gasima.html',title:'🎯 කණමුට්ටි ගැසීම'},
-  pancha:{file:'pancha-keliya.html',title:'🪁 පංච කෙළිය'},
+  pancha:{file:'pancha-keliya.html',title:'🪁 කැටපොලෙන් විදීම'},
   rahas: {file:'rahas-dadayama.html',title:'🧗 රහස් දඩයම'},
   snake: {file:'sarpa-inimang.html',title:'🐍 සර්ප හා ඉණිමං'},
 };

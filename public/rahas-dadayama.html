@@ -80,6 +80,12 @@
 </style>
 </head>
 <body>
+<a href="/index.html" class="awrudu-back">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <polyline points="15 18 9 12 15 6"></polyline>
+  </svg>
+  AwruduFest
+</a>
 <canvas id="bg-canvas"></canvas>
 <canvas id="particle-canvas"></canvas>
 <a href="/index.html" class="back-btn">← AwruduFest</a>
@@ -112,7 +118,7 @@
   <div class="overlay-title" id="final-title">ජය!</div>
   <div class="overlay-sub" id="final-sub"></div>
   <button class="overlay-btn" onclick="restartGame()">🔄 නැවත</button>
-  <button class="overlay-btn sec" onclick="window.location.href='/kotta-pora.html'">← ආපසු</button>
+  <button class="overlay-btn sec" onclick="window.location.href='/index.html'">← ආපසු</button>
 </div>
 
 <script>
@@ -162,14 +168,16 @@ let timerInt=null,hintFlash=null;
 
 // Hiding spots with clues
 const spotDefs=[
-  {emoji:'🌳',label:'ගස',clue:'කොළ ශ්‍රී විශාල ශාකය ළඟ'},
-  {emoji:'🏠',label:'ගෙය',clue:'ගෙදර දොරකඩ ළඟ'},
-  {emoji:'⛲',label:'ජල කඳ',clue:'ජලය ගලන ස්ථානය'},
-  {emoji:'🪨',label:'ගල',clue:'විශාල ගලකට ආසන්නයේ'},
-  {emoji:'🌺',label:'මල',clue:'රතු මල් සමූහය ළඟ'},
-  {emoji:'🎪',label:'කූඩාරම',clue:'රාත්‍රී ආලෝකය ළඟ'},
-  {emoji:'🌙',label:'සඳ ළඟ',clue:'රාත්‍රී අහස දෙස බලා සිටිනා...'},
-  {emoji:'💧',label:'ළිඳ',clue:'ජලය ගන්නා ස්ථානය'},
+  {emoji:'🌳',label:'ගස',    clue:'🌳 ලොකු ගස ළඟ සඟවලා තිබේ!'},
+  {emoji:'🏠',label:'ගෙය',   clue:'🏠 ගෙදර දොරකඩ ළඟ බලන්න!'},
+  {emoji:'⛲',label:'ජල කඳ', clue:'⛲ ජල කඳ ළඟ සොයන්න!'},
+  {emoji:'🪨',label:'ගල',    clue:'🪨 ලොකු ගල ළඟ බලන්න!'},
+  {emoji:'🌺',label:'මල',    clue:'🌺 රතු මල් ගස ළඟ!'},
+  {emoji:'🎪',label:'කූඩාරම',clue:'🎪 කූඩාරම ළඟ සෙවිය යුතුයි!'},
+  {emoji:'🌙',label:'සඳ',    clue:'🌙 සඳ සංකේතය ළඟ!'},
+  {emoji:'💧',label:'ළිඳ',   clue:'💧 ළිඳ ළඟ ස‍ොයන්න!'},
+  {emoji:'🌲',label:'ශ්‍රී ගස',clue:'🌲 ශ්‍රී ගස ළඟ සඟවලා!'},
+  {emoji:'🪵',label:'දැව',   clue:'🪵 දැව ගොඩ ළඟ!'},
 ];
 
 function generateLevel(){
@@ -199,7 +207,8 @@ function generateLevel(){
 function updateClue(){
   if(currentClueIdx<hidingSpots.length){
     const spot=hidingSpots[currentClueIdx];
-    document.getElementById('clue-text').textContent=`🔍 ${spot.clue}`;
+    const el=document.getElementById('clue-text');
+    el.innerHTML=`${spot.clue}`;
   }
 }
 
@@ -212,9 +221,16 @@ function drawSpots(){
 
     // Glow if hinted
     if(s.hinted){
-      ctx.globalAlpha=0.3+Math.sin(s.pulse*2)*0.2;
+      const pulseMag = s.hintPulse>0 ? s.hintPulse : 1;
+      ctx.globalAlpha=0.25+Math.sin(s.pulse*3)*0.25+pulseMag*0.15;
       ctx.fillStyle='#FFD700';
-      ctx.beginPath();ctx.arc(0,0,45,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(0,0,55*pulseMag,0,Math.PI*2);ctx.fill();
+      // Hint rings
+      ctx.globalAlpha=0.15;
+      ctx.strokeStyle='#FFD700';ctx.lineWidth=3;
+      ctx.beginPath();ctx.arc(0,0,65,0,Math.PI*2);ctx.stroke();
+      ctx.beginPath();ctx.arc(0,0,80,0,Math.PI*2);ctx.stroke();
+      if(s.hintPulse>0) s.hintPulse=Math.max(0,s.hintPulse-0.1);
     }
     ctx.globalAlpha=1;
 
@@ -297,7 +313,31 @@ function useHint(){
   document.getElementById('hints').textContent=hintsLeft;
   document.getElementById('score').textContent=score;
   const target=hidingSpots[currentClueIdx];
-  if(target) target.hinted=true;
+  if(!target) return;
+  target.hinted=true;
+  target.hintFlashCount=0;
+  // Show strong hint in clue box
+  document.getElementById('clue-text').innerHTML=
+    `<span style="font-size:1.4em">${target.emoji}</span> <strong style="color:#FFD700">${target.label}</strong> ළඟ බලන්න! (-10 pts)`;
+  // Flash the target spot 5 times
+  let fl=0;
+  const fi=setInterval(()=>{
+    target.hintPulse=(fl%2===0)?3:0;
+    fl++;
+    if(fl>10) clearInterval(fi);
+  },150);
+  // Spawn arrow particles toward target
+  const cx=canvas.width/2, cy=canvas.height/2;
+  const dx=target.x-cx, dy=target.y-cy;
+  const len=Math.hypot(dx,dy);
+  for(let i=0;i<8;i++){
+    setTimeout(()=>{
+      spawnParticles(
+        cx+dx*(i/8), cy+dy*(i/8),
+        ['#FFD700','#FF8F00'],4,2
+      );
+    },i*60);
+  }
 }
 
 function startGame(){

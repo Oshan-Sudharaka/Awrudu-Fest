@@ -5,7 +5,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/icon-512.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>කිරිකෝ ඇදීම | AwruduFest 2026</title>
+<title>කඹ ඇදීම | AwruduFest 2026</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Yatra+One&family=Noto+Sans+Sinhala:wght@400;700;900&display=swap');
 
@@ -288,6 +288,12 @@
 </style>
 </head>
 <body>
+<a href="/index.html" class="awrudu-back">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <polyline points="15 18 9 12 15 6"></polyline>
+  </svg>
+  AwruduFest
+</a>
 
 <canvas id="bg-canvas"></canvas>
 <canvas id="particle-canvas"></canvas>
@@ -295,7 +301,7 @@
 <a href="/index.html" class="back-btn">← AwruduFest</a>
 
 <div id="game-wrap">
-  <div class="game-title">🪢 කිරිකෝ ඇදීම</div>
+  <div class="game-title">🪢 කඹ ඇදීම</div>
   <div class="scoreboard">
     <div class="team-score">
       <span class="name" id="p1name">ඔබ</span>
@@ -326,7 +332,7 @@
 <!-- Start screen -->
 <div class="overlay" id="start-screen">
   <div class="emoji-big">🪢</div>
-  <div class="overlay-title">කිරිකෝ ඇදීම</div>
+  <div class="overlay-title">කඹ ඇදීම</div>
   <div class="overlay-sub">
     AI ට වඩා ඉක්මනින් button tap කරන්න!<br>
     <strong style="color:var(--gold)">3 වටයෙන් 2ක්</strong> දිනන්නා ජය ගනී 🏆
@@ -348,7 +354,7 @@
   <div class="overlay-title" id="final-title">ජය!</div>
   <div class="overlay-sub" id="final-sub"></div>
   <button class="overlay-btn" onclick="restartGame()">🔄 නැවත ක්‍රීඩා කරන්න</button>
-  <button class="overlay-btn secondary" onclick="window.location.href='/kotta-pora.html'">← නැවත යන්න</button>
+  <button class="overlay-btn secondary" onclick="window.location.href='/index.html'">← නැවත යන්න</button>
 </div>
 
 <script>

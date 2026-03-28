@@ -145,6 +145,12 @@
 </style>
 </head>
 <body>
+<a href="/index.html" class="awrudu-back">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    <polyline points="15 18 9 12 15 6"></polyline>
+  </svg>
+  AwruduFest
+</a>
 <canvas id="bg-canvas"></canvas>
 <canvas id="particle-canvas"></canvas>
 <a href="/index.html" class="back-btn">← AwruduFest</a>
@@ -180,7 +186,7 @@
   <div class="overlay-title" id="final-title">ජය!</div>
   <div class="overlay-sub" id="final-sub"></div>
   <button class="overlay-btn" onclick="restartGame()">🔄 නැවත ක්‍රීඩා</button>
-  <button class="overlay-btn sec" onclick="window.location.href='/kotta-pora.html'">← ආපසු</button>
+  <button class="overlay-btn sec" onclick="window.location.href='/index.html'">← ආපසු</button>
 </div>
 
 <script>
@@ -302,9 +308,15 @@ function createPot(level) {
 
 function spawnPots(level) {
   pots = [];
-  const count = Math.min(3 + Math.floor(score / 30), 7);
+  const count = Math.min(2 + Math.floor(score / 40), 5);
+  const cols = count;
   for (let i = 0; i < count; i++) {
-    pots.push(createPot(Math.min(Math.floor(score/50), 3)));
+    const pot = createPot(Math.min(Math.floor(score/50), 3));
+    // Spread pots evenly across bottom half of screen
+    const margin = W * 0.15;
+    pot.x = margin + (W - margin*2) * (i + 0.5) / cols;
+    pot.y = H * 0.55 + (Math.random() - 0.5) * H * 0.15;
+    pots.push(pot);
   }
 }
 
@@ -404,15 +416,15 @@ function drawPot(pot) {
 
 function drawPendulum() {
   const pivotX = W / 2;
-  const pivotY = 30;
-  const armLen = H * 0.5;
+  const pivotY = 20;
+  const armLen = H * 0.55;
 
-  // Pendulum swings ← →
+  // Pendulum swings ← → (wider arc)
   pendulum.angle += pendulum.speed * pendulum.dir;
-  if (Math.abs(pendulum.angle) > 0.9) pendulum.dir *= -1;
+  if (Math.abs(pendulum.angle) > 1.1) pendulum.dir *= -1;
 
   const stickX = pivotX + Math.sin(pendulum.angle) * armLen;
-  const stickY = pivotY + Math.cos(pendulum.angle) * armLen * 0.5;
+  const stickY = pivotY + Math.cos(pendulum.angle) * armLen * 0.75;
   stickPos.x = stickX;
   stickPos.y = stickY;
 
@@ -463,6 +475,16 @@ function drawPendulum() {
   ctx.fillRect(-7, 25, 14, 5);
   ctx.restore();
 
+  // Click indicator near stick tip
+  ctx.save();
+  ctx.globalAlpha = 0.45 + Math.sin(Date.now()*0.006)*0.3;
+  ctx.strokeStyle = '#FFD700';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.arc(stickX, stickY, 55, 0, Math.PI*2);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
   // Flash on hit
   if (stickPos.flash > 0) {
     stickPos.flash -= 0.1;
@@ -493,7 +515,7 @@ function handleHit(cx, cy) {
   const y = cy - rect.top;
 
   // Add confusion (simulate blindfolded effect)
-  confusionLevel = Math.min(1, confusionLevel + 0.05);
+  confusionLevel = Math.min(0.7, confusionLevel + 0.025);
   document.getElementById('confusion-bar').style.width = (confusionLevel * 100) + '%';
 
   // Check pots
@@ -501,7 +523,7 @@ function handleHit(cx, cy) {
   pots.forEach(pot => {
     if (pot.broken) return;
     const dist = Math.hypot(x - pot.x, y - pot.y);
-    const hitRadius = 35 * pot.size;
+    const hitRadius = Math.max(52, 52 * pot.size); // bigger, easier to hit
     if (dist < hitRadius) {
       hitPot = true;
       pot.hpLeft--;
@@ -532,7 +554,7 @@ function handleHit(cx, cy) {
 
   if (!hitPot) {
     misses++;
-    confusionLevel = Math.min(1, confusionLevel + 0.1);
+    confusionLevel = Math.min(0.7, confusionLevel + 0.05);
     // Miss effect
     spawnParticles(x, y, ['rgba(255,255,255,0.4)'], 5, 4);
   }
@@ -548,6 +570,7 @@ canvas.addEventListener('touchstart', e => {
 function startGame() {
   document.getElementById('start-screen').classList.add('hidden');
   score = 0; hits = 0; misses = 0; timeLeft = 60; confusionLevel = 0;
+  pots = []; // clear pots on restart
   gameActive = true;
   spawnPots(0);
   document.getElementById('score').textContent = '0';

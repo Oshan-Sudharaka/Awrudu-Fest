@@ -190,7 +190,7 @@ body{
   </div>
 </div>
 
-<div class="status-bar"><span class="status-txt" id="stTxt">ඔබේ වාරය — action එකක් තෝරන්න ⬇️</span></div>
+<div class="status-bar"><span class="status-txt" id="stTxt">⬇️ ඔබේ වාරය! Hit / Heavy / Block / Special</span></div>
 
 <div class="arena-wrap">
   <div id="arena">
@@ -241,6 +241,7 @@ body{
       <div class="btn-row">
         <button class="ov-btn" onclick="tryHiScore()">🔄 නැවත</button>
         <button class="ov-btn sec" onclick="showLB()">🏆 Leaderboard</button>
+        <button class="ov-btn sec" onclick="window.location.href='/index.html'" style="margin-top:6px">← AwruduFest</button>
       </div>
     </div>
   </div>
@@ -301,15 +302,15 @@ window.addEventListener('resize',resize);
 /* ══ CONSTANTS ══ */
 const MAX_HP=120,SPEC_MAX=100;
 const ACTS={
-  hit:    {dmg:20,specGain:10,blockable:false},
-  heavy:  {dmg:35,specGain:14,blockable:true},
-  block:  {dmg:0, specGain:7, isBlock:true},
+  hit:    {dmg:22,specGain:14,blockable:false},
+  heavy:  {dmg:38,specGain:18,blockable:true},
+  block:  {dmg:0, specGain:10,isBlock:true},
   special:{dmg:0, specGain:0, isSpecial:true},
 };
 const AI_STRATS=[
-  {hit:.55,heavy:.25,block:.2, crit:.08,counter:.15},
-  {hit:.42,heavy:.32,block:.26,crit:.14,counter:.28},
-  {hit:.35,heavy:.38,block:.27,crit:.22,counter:.42},
+  {hit:.60,heavy:.20,block:.20,crit:.05,counter:.10},  // Round 1 — easier
+  {hit:.48,heavy:.28,block:.24,crit:.10,counter:.20},  // Round 2 — medium
+  {hit:.40,heavy:.32,block:.28,crit:.16,counter:.32},  // Round 3 — challenge
 ];
 
 /* ══ STATE ══ */
@@ -343,14 +344,14 @@ function startGame(){
      shakeP:0,shakeA:0,particles:[],bgStars:G.bgStars,
      aiThinkF:0,aiThinking:false,lastP:null,lastA:null};
   showOv(null);updateHUD();setBtns(true);
-  setStatus('ඔබේ වාරය — action එකක් තෝරන්න ⬇️');
+  setStatus('⬇️ ඔබේ වාරය! Hit / Heavy / Block / Special');
   SFX.start();if(!rafId)gameLoop();
 }
 function nextRound(){
   G.round++;G.hp={p:MAX_HP,a:MAX_HP};G.spec=0;
   G.phase='player-turn';G.lastP=null;G.lastA=null;
   showOv(null);updateHUD();setBtns(true);
-  setStatus('ඔබේ වාරය — action එකක් තෝරන්න ⬇️');SFX.lvlup();
+  setStatus('⬇️ ඔබේ වාරය! Hit / Heavy / Block / Special');SFX.lvlup();
 }
 function tryHiScore(){
   const lb=getLB();
@@ -394,10 +395,13 @@ function resolve(pt){
     else{SFX.block();pMsg='🛡️ Block';}
     specGain+=pC.specGain;
   } else if(pt==='special'){
-    const sd=58+Math.round(G.spec*.2);
-    if(at==='block'){dmgA=Math.round(sd*.55);pMsg=`⚡ SPECIAL! (half) -${dmgA}`;}
-    else{dmgA=sd;pMsg=`⚡ SPECIAL!! -${dmgA} 💥`;}
-    G.spec=0;pts+=22;spawnParts(canvas.width*.74,canvas.height*.36,'#f5c842',14);SFX.special();
+    const sd=65+Math.round(G.spec*.25);
+    if(at==='block'){dmgA=Math.round(sd*.6);pMsg=`⚡ SPECIAL! (half) -${dmgA}`;}
+    else{dmgA=sd;pMsg=`⚡ SUPER SPECIAL!! -${dmgA} 💥💥`;}
+    G.spec=0;pts+=28;
+    spawnParts(canvas.width*.74,canvas.height*.36,'#f5c842',20);
+    spawnParts(canvas.width*.74,canvas.height*.5,'#ff8f00',14);
+    SFX.special();
   } else {
     if(at==='block'&&pC.blockable){SFX.blocked();pMsg='Blocked! 🛡️';specGain+=4;}
     else{
@@ -439,7 +443,7 @@ function resolve(pt){
 
   setTimeout(()=>{
     if(G.hp.p<=0||G.hp.a<=0)endRound();
-    else{G.phase='player-turn';setBtns(true);setStatus('ඔබේ වාරය — action එකක් තෝරන්න ⬇️');}
+    else{G.phase='player-turn';setBtns(true);setStatus('⬇️ ඔබේ වාරය! Hit / Heavy / Block / Special');}
   },780);
 }
 
@@ -477,7 +481,8 @@ function updateHUD(){
   document.getElementById('hpA').style.width=ap+'%';
   document.getElementById('hpPN').textContent=Math.max(0,G.hp.p);
   document.getElementById('hpAN').textContent=Math.max(0,G.hp.a);
-  document.getElementById('hpP').style.background=pp<30?'linear-gradient(90deg,#8b1a1a,#c0392b)':'linear-gradient(90deg,var(--green),var(--green-lt))';
+  document.getElementById('hpP').style.background=pp<25?'linear-gradient(90deg,#8b0000,#e74c3c)':pp<50?'linear-gradient(90deg,#b7770d,#f39c12)':'linear-gradient(90deg,var(--green),var(--green-lt))';
+  document.getElementById('hpA').style.background=ap<25?'linear-gradient(90deg,#8b0000,#e74c3c)':ap<50?'linear-gradient(90deg,#b7770d,#f39c12)':'linear-gradient(270deg,#c0392b,#ff6b6b)';
   document.getElementById('specFill').style.width=G.spec+'%';
   const full=G.spec>=SPEC_MAX;
   const bs=document.getElementById('bSpec');bs.disabled=!full;bs.style.opacity=full?'1':'.25';
@@ -582,7 +587,7 @@ function drawScene(){
 /* ══ DRAW FIGHTER — Highly detailed ══ */
 function drawFighter(x,baseY,isAI,shake,anim,hp){
   const H=canvas.height;
-  const r=Math.round(H*.057);   // unit: head radius
+  const r=Math.round(H*.062);   // unit: head radius — slightly bigger
   let ox=shake>0?(Math.random()-.5)*shake*.9:0;
   let oy=shake>0?(Math.random()-.5)*shake*.48:0;
   const af=anim.f;
