@@ -159,13 +159,18 @@ async function seedDefaults(){
       mainDate:'April 14, 2026 — Tuesday',mainDateSi:'අප්‍රේල් 14 — අඟහරුවාදා',
       mainTime:'09:32 AM',lagna:'මේෂ',direction:'ඊශාන',
       nakathTimes:[
-        {id:'newyr',icon:'🌅',si:'අවුරුද්ද ආරම්භ',en:'New Year',time:'09:32 AM',date:'Apr 14 · Tuesday',next:true},
-        {id:'bath',icon:'🛁',si:'ශුභ ස්නානය',en:'Ritual Bath',time:'09:32 AM',date:'Apr 14 · Tuesday',next:true},
-        {id:'fire',icon:'🔥',si:'ගිනි මැළවීම',en:'Lighting Hearth',time:'11:08 AM',date:'Apr 14 · Tuesday',next:false},
-        {id:'kiribath',icon:'🍚',si:'කිරිබත් / කෑම',en:'First Meal',time:'10:51 AM',date:'Apr 14 · Tuesday',next:false},
-        {id:'travel',icon:'🚗',si:'ශුභ ගමන',en:'Auspicious Travel',time:'06:27 AM',date:'Apr 14 · Tuesday',next:false},
-        {id:'work',icon:'💼',si:'රැකී රක්ෂා',en:'Work & Business',time:'06:50 AM',date:'Apr 15 · Wednesday',next:false},
-      ],
+      {id:'fire',   icon:'🔥', si:'තෙල්වලා ලිප දැල්වීම',          en:'Lighting the Hearth',         time:'11:08 AM', date:'Apr 5 · Sunday',     desc:'රතු+කහ ගෙහොත් · දකුණු දිශාව · ලිප් බද ගිනිමොලොව'},
+      {id:'bath',   icon:'🛁', si:'පරණ අවුරුද්ද සදහා ස්නානය',      en:'Last Year Ritual Bath',       time:'දිවා',    date:'Apr 13 · Saturday',  desc:'යුහු මිගු නාණු ගා ස්නාන · ඉෂ්ට දේවතා'},
+      {id:'newyr',  icon:'🌅', si:'අලුත් අවුරුද්ද',                 en:'Sinhala New Year 2026',       time:'09:32 AM', date:'Apr 14 · Tuesday',   desc:'සූර්යයා මේෂ රාශියට · ශාකල වර්ෂ 2569'},
+      {id:'punkal', icon:'☸️', si:'පුණ්‍ය කාලය',                    en:'Auspicious Period',           time:'03:08 – 03:56 AM', date:'Apr 14 · Tuesday', desc:'ගෙදර රැඳී ආගමික කටයුතු · ගමන් නෑ'},
+      {id:'cook',   icon:'🍚', si:'ආහාර පිසීම (ලිප ගිනි)',          en:'First Cooking · Milk Rice',   time:'10:51 AM', date:'Apr 14 · Tuesday',   desc:'රතු රෙදි · දකුණු දිශාව · කිරිබත් + කෑවිල්ල'},
+      {id:'work',   icon:'🤝', si:'වැඩ අල්ලීම, ගනුදෙනු, ආහාර',     en:'Work, Transactions & Meal',   time:'12:06 PM', date:'Apr 14 · Tuesday',   desc:'රතු රෙදි · දකුණු දිශාව · ගනුදෙනු + ආහාර'},
+      {id:'oil',    icon:'💆', si:'හිසතෙල් ගෑම',                    en:'Head Oil Anointing',          time:'06:55 AM', date:'Apr 15 · Wednesday', desc:'කළු+කොළ ගෙහොත් · දකුණු · කොහොඹ+ශ්‍රේෂ්ඨ'},
+      {id:'hedisi', icon:'👑', si:'හේදිසී රාජකාරී',                 en:'Royal Duties Journey',        time:'05:38 AM', date:'Apr 17 · Friday',    desc:'රතු ගෙහොත් · කිරිබත් + ශිරිබාන · රාජකාරී'},
+      {id:'work1',  icon:'💼', si:'රැකිරක්ෂා පිටත්ව යෑම (1)',       en:'Setting Out for Work 1',      time:'06:27 AM', date:'Apr 20 · Monday',    desc:'ස්වේත රෙදි · කිරිබාණ · දකුණු දිශාව'},
+      {id:'work2',  icon:'🌾', si:'රැකිරක්ෂා පිටත්ව යෑම (2)',       en:'Setting Out for Work 2',      time:'06:50 AM', date:'Apr 20 · Monday',    desc:'ස්වේත+භූමිනු · ගිගෙනිහිර · ශිරිබාන+කිරිබත්'},
+      {id:'plant',  icon:'🌱', si:'පළ සිටුවීම',                     en:'Planting & Agriculture',      time:'09:01 AM', date:'Apr 23 · Thursday',  desc:'රතු+ශේ ගෙහොත් · නැගෙනහිර · ශිරිබාණ+කිරිබත්'},
+    ],
     });
 
   // Always sync official contact
