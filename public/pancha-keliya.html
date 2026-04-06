@@ -225,7 +225,7 @@ function spawnWave(){
   for(let i=0;i<count;i++) setTimeout(()=>spawnTarget(),i*500);
 }
 
-function drawCatapult Shooting(){
+function drawCatapultSling(){
   const fx=sling.baseX-18,fy=sling.baseY-20;
   // Fork body
   ctx.strokeStyle='#5D4037';ctx.lineWidth=8;ctx.lineCap='round';
@@ -484,11 +484,21 @@ function loop(ts){
   updateParts();
   ctx.clearRect(0,0,W,H);
   drawTargets(dt);
-  drawCatapult Shooting();
+  drawCatapultSling();
   drawProjectiles(dt);
   drawEffects(dt);
 }
 requestAnimationFrame(ts=>{lastTime=ts;loop(ts);});
+
+// Browser back button → AwruduFest main site
+window.addEventListener('popstate', function(e){
+  window.location.href = '/index.html';
+});
+// Push a state so back button works
+if(window.history && window.history.pushState){
+  window.history.pushState({page:'game'}, '', window.location.href);
+}
+
 </script>
 </body>
 </html>

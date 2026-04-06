@@ -315,29 +315,17 @@ function useHint(){
   const target=hidingSpots[currentClueIdx];
   if(!target) return;
   target.hinted=true;
-  target.hintFlashCount=0;
-  // Show strong hint in clue box
+  target.hintPulse=3;
+  // Show WHICH spot to click — player must still click it themselves
   document.getElementById('clue-text').innerHTML=
-    `<span style="font-size:1.4em">${target.emoji}</span> <strong style="color:#FFD700">${target.label}</strong> ළඟ බලන්න! (-10 pts)`;
-  // Flash the target spot 5 times
+    `<span style="font-size:1.6em">${target.emoji}</span> <strong style="color:#FFD700;font-size:1.1em">${target.label}</strong> ළඟ click කරන්න!`;
+  // Flash glow on target for 3s
   let fl=0;
   const fi=setInterval(()=>{
-    target.hintPulse=(fl%2===0)?3:0;
+    target.hintPulse=(fl%2===0)?4:1;
     fl++;
-    if(fl>10) clearInterval(fi);
+    if(fl>20){ clearInterval(fi); target.hintPulse=1; }
   },150);
-  // Spawn arrow particles toward target
-  const cx=canvas.width/2, cy=canvas.height/2;
-  const dx=target.x-cx, dy=target.y-cy;
-  const len=Math.hypot(dx,dy);
-  for(let i=0;i<8;i++){
-    setTimeout(()=>{
-      spawnParticles(
-        cx+dx*(i/8), cy+dy*(i/8),
-        ['#FFD700','#FF8F00'],4,2
-      );
-    },i*60);
-  }
 }
 
 function startGame(){
@@ -383,6 +371,16 @@ function loop(ts){
   drawFoundFlags();
 }
 requestAnimationFrame(ts=>{lastTime=ts;loop(ts);});
+
+// Browser back button → AwruduFest main site
+window.addEventListener('popstate', function(e){
+  window.location.href = '/index.html';
+});
+// Push a state so back button works
+if(window.history && window.history.pushState){
+  window.history.pushState({page:'game'}, '', window.location.href);
+}
+
 </script>
 </body>
 </html>

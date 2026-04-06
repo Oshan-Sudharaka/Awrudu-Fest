@@ -341,6 +341,7 @@ header { text-align: center; padding: 24px 0 10px; }
   <div class="stats-strip">
     <div class="stat-box"><div class="stat-label">ලකුණු</div><div class="stat-val" id="scoreVal">0</div></div>
     <div class="stat-box"><div class="stat-label">ජය</div><div class="stat-val" id="winsVal">0</div></div>
+    <div class="stat-box"><div class="stat-label">Round</div><div class="stat-val" id="roundVal">1/3</div></div>
     <div class="stat-box"><div class="stat-label">Streak 🔥</div><div class="stat-val" id="streakVal">0</div></div>
     <div class="stat-box"><div class="stat-label">ඉහළම</div><div class="stat-val sm" id="hiVal">0</div></div>
   </div>
@@ -458,7 +459,10 @@ let G = {
   streak:0, bestStreak:0, ballPos:-1,
   phase:'idle', numPots:3,
   timerInt:null, timerLeft:0,
+  // Best of 3 rounds
+  roundWins:0, roundLosses:0, roundNum:1,
 };
+const ROUNDS_TO_WIN=2, MAX_ROUNDS=3;
 
 /* ══════════════════════════════
    🫙 POT SVG
@@ -508,15 +512,17 @@ function initPots() {
     const w = document.createElement('div');
     w.className = 'pot-wrap'; w.id = `pw${i}`;
     w.innerHTML = `${makePot(i)}<div class="ball" id="bl${i}"></div><div class="pot-num">${i+1}</div>`;
-    w.onclick = () => pickPot(i);
+    w.onclick = function(){ const row=document.getElementById('potsRow'); pickPot([...row.children].indexOf(this)); };
     row.appendChild(w);
   }
 }
 
 function setLevel(lv) {
   G.level = lv;
+  G.roundWins=0; G.roundLosses=0; G.roundNum=1; G.streak=0;
   document.querySelectorAll('.lvl-tab').forEach(b=>b.classList.remove('on'));
   document.querySelector(`.lvl-tab.${lv}`).classList.add('on');
+  updateUI();
   if (G.phase==='idle') initPots();
 }
 
@@ -534,13 +540,22 @@ function showResult(text, type) {
   setTimeout(()=>{ el.style.display='none'; }, 2700);
 }
 
+function getBallEl(pos) {
+  // pos = DOM position index
+  const row = document.getElementById('potsRow');
+  const pots = [...row.children];
+  return pots[pos] ? pots[pos].querySelector('.ball') : null;
+}
 function showBall(pos) {
-  const b = document.getElementById(`bl${pos}`);
-  b.style.display='block'; b.classList.add('show');
+  const b = getBallEl(pos);
+  if(b){ b.style.display='block'; b.classList.add('show'); }
 }
 function hideBall(pos) {
-  const b = document.getElementById(`bl${pos}`);
-  b.classList.remove('show'); b.style.display='none';
+  const b = getBallEl(pos);
+  if(b){ b.classList.remove('show'); b.style.display='none'; }
+}
+function hideAllBalls() {
+  document.querySelectorAll('.ball').forEach(b=>{b.classList.remove('show');b.style.display='none';});
 }
 
 const sleep = ms => new Promise(r=>setTimeout(r,ms));
@@ -578,27 +593,41 @@ function stopTimer() {
   document.getElementById('timerFill').classList.remove('urgent');
 }
 
-async function timeOut() {
-  G.phase='revealed'; G.total++; G.streak=0;
+async async function timeOut() {
+  G.phase='revealed'; G.total++; G.streak=0; G.roundLosses++;
   SFX.lose();
   showBall(G.ballPos);
-  showResult(`⏰ කාලය ඉකුත් විය! බෝලය ${G.ballPos+1} නො. මුට්ටිය යට තිබුණා`, 'lose');
+  showResult(`⏰ Round ${G.roundNum} - කාලය ඉකුත්! No.${G.ballPos+1} යට`, 'lose');
   updateUI();
-  await sleep(2300);
-  hideBall(G.ballPos);
-  G.phase='idle';
-  document.getElementById('playBtn').style.display='block';
-  setInst('නැවත ක්‍රීඩා කරන්නද?', '🎮');
+  await sleep(2200);
+  hideAllBalls();
+  G.roundNum++;
+  if(G.roundLosses>=ROUNDS_TO_WIN){
+    showResult('💔 Match End — නැවත ක්‍රීඩා!','lose');
+    await sleep(1600);
+    resetRounds();
+  } else if(G.roundNum>MAX_ROUNDS){
+    showResult(`🤝 Match ඉවරයි — ${G.roundWins}/${MAX_ROUNDS} ජය`,'win');
+    await sleep(1600);
+    resetRounds();
+  } else {
+    G.phase='idle';
+    document.getElementById('playBtn').style.display='block';
+    setInst(`Round ${G.roundNum} — ▶ ක්‍රීඩා!`, '🎮');
+  }
 }
 
 /* ══════════════════════════════
    🔀 SHUFFLE
 ══════════════════════════════ */
 async function swapPots(a, b, dur) {
-  const elA = document.getElementById(`pw${a}`);
-  const elB = document.getElementById(`pw${b}`);
-  elA.classList.add('shuffling'); elB.classList.add('shuffling');
+  // Get elements by CURRENT DOM position (re-query each time)
+  const row = document.getElementById('potsRow');
+  const pots = [...row.children];
+  const elA = pots[a], elB = pots[b];
+  if(!elA||!elB) return;
 
+  elA.classList.add('shuffling'); elB.classList.add('shuffling');
   const rA=elA.getBoundingClientRect(), rB=elB.getBoundingClientRect();
   const dx = rB.left - rA.left;
 
@@ -606,34 +635,36 @@ async function swapPots(a, b, dur) {
   elB.style.transition=`transform ${dur}ms cubic-bezier(0.4,0,0.6,1)`;
   elA.style.transform=`translateX(${dx}px)`;
   elB.style.transform=`translateX(${-dx}px)`;
-
   await sleep(dur);
 
   elA.style.transition='none'; elB.style.transition='none';
   elA.style.transform=''; elB.style.transform='';
   elA.classList.remove('shuffling'); elB.classList.remove('shuffling');
 
-  // Swap IDs
-  [elA.id, elB.id] = [elB.id, elA.id];
-  const bA=elA.querySelector('.ball'), bB=elB.querySelector('.ball');
-  [bA.id, bB.id] = [bB.id, bA.id];
-  const nA=elA.querySelector('.pot-num'), nB=elB.querySelector('.pot-num');
-  [nA.textContent, nB.textContent] = [nB.textContent, nA.textContent];
+  // Physical DOM swap only - NO ID changes
+  const nxt=elA.nextSibling;
+  if(nxt===elB){ row.insertBefore(elB,elA); }
+  else{ const nxtB=elB.nextSibling; row.insertBefore(elB,nxt); row.insertBefore(elA,nxtB||null); }
 
-  // Physical DOM swap
-  const parent=elA.parentNode, nxt=elA.nextSibling;
-  if (nxt===elB) { parent.insertBefore(elB,elA); }
-  else { const nxtB=elB.nextSibling; parent.insertBefore(elB,nxt); parent.insertBefore(elA,nxtB); }
+  // Renumber pots by new DOM position
+  [...row.children].forEach((el,i)=>{
+    el.querySelector('.pot-num').textContent=i+1;
+  });
 }
 
 async function doShuffle(count, speed) {
+  const row=document.getElementById('potsRow');
   for (let i=0; i<count; i++) {
-    let a=Math.floor(Math.random()*G.numPots), b;
-    do { b=Math.floor(Math.random()*G.numPots); } while(b===a);
+    const n=[...row.children].length;
+    let a=Math.floor(Math.random()*n), b;
+    do{ b=Math.floor(Math.random()*n); }while(b===a);
     SFX.shuffle();
+    // Update ballPos BEFORE swap
+    const prevBall=G.ballPos;
     await swapPots(a, b, speed);
-    if(G.ballPos===a) G.ballPos=b;
-    else if(G.ballPos===b) G.ballPos=a;
+    // After DOM swap: ball moves with its pot — track new DOM index
+    if(prevBall===a) G.ballPos=b;
+    else if(prevBall===b) G.ballPos=a;
     await sleep(speed*0.11);
   }
 }
@@ -643,6 +674,8 @@ async function doShuffle(count, speed) {
 ══════════════════════════════ */
 async function startGame() {
   if (G.phase!=='idle') return;
+  // Auto-reset if match already over
+  if(G.roundNum>MAX_ROUNDS){ G.roundWins=0; G.roundLosses=0; G.roundNum=1; G.streak=0; }
   G.phase='showing';
   document.getElementById('playBtn').style.display='none';
   document.getElementById('resultMsg').style.display='none';
@@ -674,35 +707,72 @@ async function pickPot(idx) {
   if (G.phase!=='picking') return;
   stopTimer();
   G.phase='revealed'; G.total++;
-
+  // idx = DOM position of clicked pot
+  const row=document.getElementById('potsRow');
+  const pots=[...row.children];
   const correct = (idx===G.ballPos);
-  const pw = document.getElementById(`pw${idx}`);
+  const pw = pots[idx];
 
   if (correct) {
-    G.wins++; G.streak++;
+    G.wins++; G.roundWins++; G.streak++;
     if (G.streak>G.bestStreak) G.bestStreak=G.streak;
     const pts = CFG[G.level].pts + Math.min(G.streak*5, 30);
     G.score+=pts; if(G.score>G.hi) G.hi=G.score;
-
     pw.classList.add('correct');
     showBall(idx); SFX.win(); celebrate(pw);
-
-    const sk = G.streak>1 ? ` · ${G.streak}x 🔥 Streak!` : '';
-    showResult(`🎉 නිවැරදියි! +${pts} ලකුණු${sk}`, 'win');
+    const sk = G.streak>1 ? ` · ${G.streak}x 🔥` : '';
+    showResult(`🎉 Round ${G.roundNum} ජය! +${pts}${sk}`, 'win');
   } else {
-    G.streak=0;
+    G.streak=0; G.roundLosses++;
     pw.classList.add('wrong');
     showBall(G.ballPos); SFX.lose();
-    showResult(`😔 වැරදියි! බෝලය ${G.ballPos+1} නො. මුට්ටිය යට තිබුණා`, 'lose');
+    showResult(`😔 Round ${G.roundNum} වැරදි! No.${G.ballPos+1} යට තිබුණා`, 'lose');
   }
 
   updateUI();
-  await sleep(2150);
+  await sleep(2200);
   pw.classList.remove('correct','wrong');
-  hideBall(correct ? idx : G.ballPos);
+  hideAllBalls();
+
+  G.roundNum++;
+
+  // Check match result
+  if(G.roundWins>=ROUNDS_TO_WIN){
+    // WON THE MATCH
+    G.score+=50; if(G.score>G.hi) G.hi=G.score;
+    updateUI();
+    showResult(`🏆 ජය! ${G.roundWins}/${MAX_ROUNDS} rounds ජය! +50 bonus!`, 'win');
+    SFX.win();
+    await sleep(2500);
+    resetRounds();
+  } else if(G.roundLosses>=ROUNDS_TO_WIN){
+    // LOST THE MATCH
+    showResult(`💔 Match End — ${G.roundWins}/${MAX_ROUNDS} ජය. නැවත!`, 'lose');
+    SFX.lose();
+    await sleep(2500);
+    resetRounds();
+  } else if(G.roundNum>MAX_ROUNDS){
+    // Draw — all 3 rounds done
+    showResult(`🤝 ${G.roundWins}/${MAX_ROUNDS} — Match ඉවරයි!`, 'win');
+    await sleep(2000);
+    resetRounds();
+  } else {
+    // Next round
+    G.phase='idle';
+    document.getElementById('playBtn').style.display='block';
+    setInst(`Round ${G.roundNum} — ▶ ක්‍රීඩා!`, '🎮');
+  }
+}
+
+function resetRounds(){
+  G.roundWins=0; G.roundLosses=0; G.roundNum=1;
+  G.streak=0;
   G.phase='idle';
   document.getElementById('playBtn').style.display='block';
-  setInst('නැවත ක්‍රීඩා කරන්නද?', '🎮');
+  const rm=document.getElementById('resultMsg');
+  if(rm){rm.style.display='none';}
+  updateUI();
+  setInst('නව Match — Round 1 ▶', '🏆');
 }
 
 /* ══════════════════════════════
@@ -728,6 +798,8 @@ function updateUI() {
   document.getElementById('scoreVal').textContent    = G.score;
   document.getElementById('winsVal').textContent     = G.wins;
   document.getElementById('streakVal').textContent   = G.streak;
+  const rdEl=document.getElementById('roundVal');
+  if(rdEl) rdEl.textContent=`${Math.min(G.roundNum,MAX_ROUNDS)}/${MAX_ROUNDS}`;
   document.getElementById('hiVal').textContent       = G.hi;
   document.getElementById('sbWins').textContent      = G.wins;
   document.getElementById('sbTotal').textContent     = G.total;
@@ -737,6 +809,16 @@ function updateUI() {
 
 // ── Boot ──
 initPots(); updateUI();
+
+// Browser back button → AwruduFest main site
+window.addEventListener('popstate', function(e){
+  window.location.href = '/index.html';
+});
+// Push a state so back button works
+if(window.history && window.history.pushState){
+  window.history.pushState({page:'game'}, '', window.location.href);
+}
+
 </script>
 </body>
 </html>
