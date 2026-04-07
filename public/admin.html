@@ -800,6 +800,9 @@ function logout(){
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('lgUser').value='';document.getElementById('lgPass').value='';
 }
+// Auto-login deferred to after all declarations
+// (moved to bottom of script)
+
 /* ════════════ API HELPERS ════════════ */
 const API=async(path,opts={})=>{
   const res=await fetch('/api'+path,{...opts,headers:{'Content-Type':'application/json','x-admin-token':adminToken,...(opts.headers||{})}});
@@ -877,9 +880,9 @@ const defaultGames=[
   {id:'shell', name:'කනා මුට්ටිය',  type:'SHELL GAME',  icon:'🏺', file:'kana-muttiya.html',        status:'active', badge:'HOT', desc:'Pot shuffle game! Ball සඟවලා — නිවැරදි pot තෝරා ලකුණු ගන්න.',          plays:8420, players:'1 Player · Casual'},
   {id:'tag',   name:'Blind Tag',     type:'ACTION TAG',  icon:'🙈', file:'kana-muttiya-tag.html',    status:'active', badge:'NEW', desc:'Blindfolded character ගෙන AI runners catch කරන්න!',                  plays:7340, players:'1 vs AI · Action'},
   {id:'kotta', name:'කොට්ට පොර',   type:'TURN BASED',  icon:'🛏️', file:'kotta-pora.html',          status:'active', badge:'NEW', desc:'AI ව කොට්ටෙන් Turn-by-turn combat! Special moves, best of 3.',       plays:6124, players:'1 vs AI · Fighting'},
-  {id:'kiriko',name:'කඹ ඇදීම', type:'ROPE PULL',  icon:'🪢', file:'kiri-ko-adeema.html',      status:'active', badge:'NEW', desc:'AI කණ්ඩායමට එරෙහිව ශක්තිමත් ලෙස ඇදීම! 3 වටයෙන් ජය ගන්න.',         plays:0,    players:'1 vs AI · Rope Pull'},
+  {id:'kiriko',name:'කිරිකෝ ඇදීම', type:'TUG OF WAR',  icon:'🪢', file:'kiri-ko-adeema.html',      status:'active', badge:'NEW', desc:'AI කණ්ඩායමට එරෙහිව ශක්තිමත් ලෙස ඇදීම! 3 වටයෙන් ජය ගන්න.',         plays:0,    players:'1 vs AI · Fast Tap'},
   {id:'kanamut',name:'කණමුට්ටි ගැසීම',type:'POT BREAKING',icon:'🎯',file:'kana-muttiya-gasima.html',status:'active', badge:'NEW', desc:'ඇස් බැඳ pendulum ළඟ click කර කාමර කඩාගන්න. 60s challenge!',         plays:0,    players:'1 Player · Aim'},
-  {id:'pancha',name:'කැටපොලෙන් විදීම',   type:'CATAPULT',   icon:'🪁', file:'pancha-keliya.html',       status:'active', badge:'NEW', desc:'Slingshot drag & release! ගමන් කරන ඉලක්ක hit කරන්න. Streak bonus!', plays:0,    players:'1 Player · Skill'},
+  {id:'pancha',name:'පංච කෙළිය',   type:'SLINGSHOT',   icon:'🪁', file:'pancha-keliya.html',       status:'active', badge:'NEW', desc:'Slingshot drag & release! ගමන් කරන ඉලක්ක hit කරන්න. Streak bonus!', plays:0,    players:'1 Player · Skill'},
   {id:'rahas', name:'රහස් දඩයම',   type:'TREASURE HUNT',icon:'🧗', file:'rahas-dadayama.html',     status:'active', badge:'NEW', desc:'ඉඟිය කියවා සැඟවුණු ධජය සොයා ගන්න! 90s ඇතුළත ධජ 5ක්.',              plays:0,    players:'1 Player · Puzzle'},
   {id:'snake', name:'සර්ප හා ඉණිමං',type:'BOARD GAME',  icon:'🐍', file:'sarpa-inimang.html',      status:'active', badge:'HOT', desc:'සිංහල Snakes & Ladders! AI එක්ක dice ගසා board race කරන්න.',         plays:0,    players:'1 vs AI · Board'},
 ];
@@ -1474,10 +1477,12 @@ function aToast(msg,type='ok'){
 
 // Init
 document.getElementById('tbDate').textContent=new Date().toLocaleDateString('si-LK',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+// Auto-login check (deferred - runs after all declarations)
+(function(){
+  const _st=sessionStorage.getItem('adminToken');
+  if(_st){adminToken=_st;finishLogin('Admin');}
+})();
 
-// Auto-login check (මෙතනට Paste කරන්න)
-const st=sessionStorage.getItem('adminToken');
-if(st){adminToken=st;finishLogin('Admin');}
 </script>
 </body>
 </html>
