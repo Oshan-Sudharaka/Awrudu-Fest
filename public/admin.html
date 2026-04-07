@@ -800,10 +800,6 @@ function logout(){
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('lgUser').value='';document.getElementById('lgPass').value='';
 }
-// Auto-login check
-const st=sessionStorage.getItem('adminToken');
-if(st){adminToken=st;finishLogin('Admin');}
-
 /* ════════════ API HELPERS ════════════ */
 const API=async(path,opts={})=>{
   const res=await fetch('/api'+path,{...opts,headers:{'Content-Type':'application/json','x-admin-token':adminToken,...(opts.headers||{})}});
@@ -1478,6 +1474,10 @@ function aToast(msg,type='ok'){
 
 // Init
 document.getElementById('tbDate').textContent=new Date().toLocaleDateString('si-LK',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+// Auto-login check (මෙතනට Paste කරන්න)
+const st=sessionStorage.getItem('adminToken');
+if(st){adminToken=st;finishLogin('Admin');}
 </script>
 </body>
 </html>
