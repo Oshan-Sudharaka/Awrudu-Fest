@@ -1733,6 +1733,56 @@ applyTheme();
 
 // Share URL display
 document.getElementById('shareUrl').textContent=location.host||'awrudu.featuredesignz.site';
+
+/* ═══════════════════════════════════════════════════════════════
+   LIVE UPDATE POLLING — Admin panel changes auto-reflect (30s)
+   Admin ෙදන changes database ෙව් save ෙවනකොට version bump
+   වෙනවා. ෙමකෙන් detect කරලා relevant sections reload කරනවා.
+   ══════════════════════════════════════════════════════════════ */
+(function startLiveUpdates(){
+  let _lastVersion = 0;
+  let _failCount   = 0;
+
+  async function checkVersion(){
+    try{
+      const res = await fetch('/api/version',{cache:'no-store'});
+      if(!res.ok) throw new Error('bad status');
+      const {v} = await res.json();
+      _failCount = 0;
+
+      if(_lastVersion !== 0 && v > _lastVersion){
+        // Admin ෙදන change detect කළා — දැන් sections refresh
+        console.log('[AwruduFest] Admin update detected (v'+_lastVersion+'→'+v+'), refreshing…');
+
+        // 1. Ticker / Announcements
+        loadTicker();
+
+        // 2. Games grid
+        loadGamesFromAPI().then(()=>loadPlayCounts());
+
+        // 3. Theme (colours)
+        applyTheme();
+
+        // 4. Social links (footer)
+        loadSocialLinks();
+
+        // 5. Leaderboard (in case entries added/removed)
+        if(typeof loadLeaderboard === 'function') loadLeaderboard();
+      }
+      _lastVersion = v;
+    }catch(e){
+      _failCount++;
+      // 5 failures in a row — server may be down, slow down polling
+      if(_failCount >= 5) clearInterval(_pollInterval);
+    }
+  }
+
+  // Initial read (no UI refresh on first call — just store version)
+  checkVersion();
+
+  // Poll every 30 seconds
+  const _pollInterval = setInterval(checkVersion, 30000);
+})();
 </script>
 
 <!-- ═══ FIREWORKS CANVAS ═══ -->
