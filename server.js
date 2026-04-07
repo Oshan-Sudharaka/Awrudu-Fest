@@ -1,3 +1,5 @@
+require('dotenv').config(); // .env file load කරනවා (MongoDB Atlas URI etc.)
+
 const express   = require('express');
 const mongoose  = require('mongoose');
 const bcrypt    = require('bcryptjs');
@@ -78,7 +80,18 @@ function requireRole(...roles){
 
 // ── KV HELPERS ──
 const getKV=async(key,def={})=>{const d=await KV.findOne({key});return d?.value??def;};
-const setKV=async(key,value)=>KV.findOneAndUpdate({key},{value},{upsert:true,new:true});
+// Admin change ෙද්දී version bump කරනවා → main site poll කරලා detect කරනවා
+async function bumpVersion(){
+  const v=await KV.findOne({key:'_v'});
+  const nv=(v?.value||0)+1;
+  await KV.findOneAndUpdate({key:'_v'},{value:nv},{upsert:true});
+  return nv;
+}
+const setKV=async(key,value,bump=false)=>{
+  const r=await KV.findOneAndUpdate({key},{value},{upsert:true,new:true});
+  if(bump)await bumpVersion();
+  return r;
+};
 
 // ── SEED ──
 async function seedDefaults(){
@@ -221,6 +234,11 @@ app.post('/api/leaderboard',async(req,res)=>{
   catch(e){res.status(500).json({error:e.message});}
 });
 app.get('/api/health',(_req,res)=>res.json({ok:true,ts:Date.now()}));
+// Main site ෙමකෙන් poll කරලා admin changes detect කරනවා
+app.get('/api/version',async(_req,res)=>{
+  try{const v=await KV.findOne({key:'_v'});res.json({v:v?.value||0,ts:Date.now()});}
+  catch{res.json({v:0,ts:Date.now()});}
+});
 app.get('/api/games',async(req,res)=>{
   try{
     const games=await Game.find({status:{$ne:'hidden'}}).sort({order:1}).lean();
@@ -301,8 +319,9 @@ app.put('/api/games/:id',authAdmin,async(req,res)=>{
   try{
     const g=await Game.findOneAndUpdate({gameId:req.params.id},req.body,{new:true}).lean();
     if(!g)return res.status(404).json({error:'Not found'});
+    await bumpVersion();
     res.json({...g,id:g.gameId});
-  }catch(e){res.status(500).json({error:e.message});}
+  }catch(e){res.status(500).json({error:e.message});}\
 });
 app.delete('/api/games/:id',authAdmin,requireRole('super','admin'),async(req,res)=>{try{await Game.findOneAndDelete({gameId:req.params.id});res.json({ok:true});}catch(e){res.status(500).json({error:e.message});}});
 
@@ -312,15 +331,15 @@ app.delete('/api/leaderboard',authAdmin,requireRole('super','admin'),async(req,r
 
 // Announcements
 app.get('/api/admin/announcements',authAdmin,async(req,res)=>{try{res.json(await Ann.find().sort({order:1}));}catch(e){res.status(500).json({error:e.message});}});
-app.post('/api/announcements',authAdmin,async(req,res)=>{try{res.status(201).json(await Ann.create(req.body));}catch(e){res.status(500).json({error:e.message});}});
-app.put('/api/announcements/:id',authAdmin,async(req,res)=>{try{res.json(await Ann.findByIdAndUpdate(req.params.id,req.body,{new:true}));}catch(e){res.status(500).json({error:e.message});}});
-app.delete('/api/announcements/:id',authAdmin,async(req,res)=>{try{await Ann.findByIdAndDelete(req.params.id);res.json({ok:true});}catch(e){res.status(500).json({error:e.message});}});
+app.post('/api/announcements',authAdmin,async(req,res)=>{try{const r=await Ann.create(req.body);await bumpVersion();res.status(201).json(r);}catch(e){res.status(500).json({error:e.message});}});
+app.put('/api/announcements/:id',authAdmin,async(req,res)=>{try{const r=await Ann.findByIdAndUpdate(req.params.id,req.body,{new:true});await bumpVersion();res.json(r);}catch(e){res.status(500).json({error:e.message});}});
+app.delete('/api/announcements/:id',authAdmin,async(req,res)=>{try{await Ann.findByIdAndDelete(req.params.id);await bumpVersion();res.json({ok:true});}catch(e){res.status(500).json({error:e.message});}});
 
 // KV-based admin endpoints
 ['theme','social','popup','nakath','contact','settings'].forEach(key=>{
   const storeKey = key==='nakath'?'nakath2026':key;
   app.get(`/api/admin/${key}`,authAdmin,async(req,res)=>{try{res.json(await getKV(storeKey,{}));}catch(e){res.json({});}});
-  app.put(`/api/${key}`,authAdmin,async(req,res)=>{try{res.json((await setKV(storeKey,req.body)).value);}catch(e){res.status(500).json({error:e.message});}});
+  app.put(`/api/${key}`,authAdmin,async(req,res)=>{try{res.json((await setKV(storeKey,req.body,true)).value);}catch(e){res.status(500).json({error:e.message});}});
 });
 
 // Stats & Analytics
