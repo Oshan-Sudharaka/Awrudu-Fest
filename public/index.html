@@ -1762,47 +1762,4 @@ document.getElementById('shareUrl').textContent=location.host||'awrudu.featurede
 
 
     <div class="popup-actions">
-            <button class="popup-btn" id="popupBtn1" data-link="#games" 
-              onclick="closePopup();var l=this.getAttribute('data-link');if(l.startsWith('#')){document.querySelector(l).scrollIntoView({behavior:'smooth'});closePopup();}else{window.open(l,'_blank');closePopup();}">
-        🎮 Play Games
-      </button>
-      <button class="popup-btn sec" id="popupBtn2" onclick="closePopup()">
-        💌 Wish Share කරන්න
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- === DYNAMIC ADMIN UPDATES SCRIPT (මේක තමයි ඔයාට ඕනේ) === -->
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const [theme, games, lb, ann] = await Promise.all([
-      fetch('/api/theme').then(r => r.json()),
-      fetch('/api/games').then(r => r.json()),
-      fetch('/api/leaderboard?limit=8').then(r => r.json()),
-      fetch('/api/announcements').then(r => r.json())
-    ]);
-
-    // Theme colors from Admin Panel
-    const r = document.documentElement.style;
-    if(theme.gold) r.setProperty('--gold', theme.gold);
-    if(theme.goldLt) r.setProperty('--gold-lt', theme.goldLt);
-    if(theme.maroon) r.setProperty('--maroon', theme.maroon);
-
-    // Dynamic Games
-    const grid = document.getElementById('gamesGrid');
-    if(grid && games.length) {
-      grid.innerHTML = games.map(g => {
-        const key = g.id || g.gameId;
-        return `<div class="gcard">... (same as before) ...</div>`;
-      }).join('');
-    }
-
-    console.log('✅ Admin updates now working!');
-  } catch(e) {}
-});
-</script>
-
-</body>
-</html>
+      <button class="popup-btn" id="popupBtn1" data-link="#games" onclick="closePopup();var l=this.getAttribute('data-link');if(l.startsWith('#')){document.querySelector

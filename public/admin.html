@@ -980,7 +980,7 @@ function renderGames(){
 async function quickToggle(id, checked){
   const g=gamesData.find(x=>x.id===id);if(!g)return;
   g.status=checked?'active':'hidden';
-  try{await PUT('/admin/games/'+id,{status:g.status});}catch(e){}
+  try{await PUT('/games/'+id,{status:g.status});}catch(e){}
   renderGames();
   aToast(checked?`✅ "${g.name}" LIVE!`:`🔴 "${g.name}" hidden`);
 }
@@ -1013,7 +1013,7 @@ async function saveNameEdit(){
   if(!data.name){aToast('⚠️ Name empty!','err');return;}
   const i=gamesData.findIndex(g=>g.id===nameEditId);
   if(i>=0)gamesData[i]={...gamesData[i],...data};
-  try{await PUT('/admin/games/'+nameEditId,data);}catch(e){}
+  try{await PUT('/games/'+nameEditId,data);}catch(e){}
   renderGames();closeNameEdit();
   aToast('✅ Game customized!');
 }
@@ -1055,8 +1055,8 @@ async function saveGame(){
   };
   if(!data.name){aToast('⚠️ Game name required!','err');return;}
   try{
-    if(editGameId){await PUT('/admin/games/'+editGameId,data);aToast('✅ Game updated!');}
-    else{await POST('/admin/games',data);aToast('✅ Game added!');}
+    if(editGameId){await PUT('/games/'+editGameId,data);aToast('✅ Game updated!');}
+    else{await POST('/games',data);aToast('✅ Game added!');}
   }catch(e){aToast('⚠️ Saved locally','err');}
   if(editGameId){const i=gamesData.findIndex(g=>g.id===editGameId);if(i>=0)gamesData[i]={...gamesData[i],...data};}
   else{const newId='g'+Date.now();gamesData.push({id:newId,gameId:newId,...data,plays:0});}
@@ -1065,12 +1065,12 @@ async function saveGame(){
 async function toggleGame(id){
   const g=gamesData.find(x=>x.id===id);if(!g)return;
   g.status=g.status==='active'?'hidden':'active';
-  try{await PUT('/admin/games/'+id,{status:g.status});}catch(e){}
+  try{await PUT('/games/'+id,{status:g.status});}catch(e){}
   renderGames();aToast(`${g.status==='active'?'✅':'🔴'} Game ${g.status==='active'?'LIVE':'hidden'}!`);
 }
 async function deleteGame(id){
   if(!confirm('Delete this game?'))return;
-  try{await DEL('/admin/games/'+id);}catch(e){}
+  try{await DEL('/games/'+id);}catch(e){}
   gamesData=gamesData.filter(g=>g.id!==id);renderGames();aToast('🗑️ Game deleted');
 }
 
