@@ -278,10 +278,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
       </div>
     </div>
 
-    <!-- 8. හදිසි රාජකාරී — Apr 17 05:38 AM -->
+    <!-- 8. හේදිසී රාජකාරී — Apr 17 05:38 AM -->
     <div class="nc">
       <div class="nc-head"><span class="nc-ico">👑</span>
-        <div><div class="nc-si">හදිසි රාජකාරී සදහා පිටත්ව යෑම</div><div class="nc-en">ROYAL DUTIES · FIRST JOURNEY</div></div>
+        <div><div class="nc-si">හේදිසී රාජකාරී සදහා පිටත්ව යෑම</div><div class="nc-en">ROYAL DUTIES · FIRST JOURNEY</div></div>
         <span class="bdg bok">Apr 17</span></div>
       <div class="nc-body">
         <div class="nc-time"><span style="font-size:1.1rem">⏰</span>
@@ -378,7 +378,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
       <div class="fc"><span>&#127834;</span> කිරිබත්</div><div class="fc"><span>&#127852;</span> කොකිස්</div>
       <div class="fc"><span>&#129381;</span> කවුම්</div><div class="fc"><span>&#127855;</span> කිතුල් පැනි</div>
       <div class="fc"><span>&#127799;</span> රොටි</div><div class="fc"><span>&#129395;</span> ඉදිඅප්ප</div>
-      <div class="fc"><span>&#127819;</span> පැණි බීම</div>
+      <div class="fc"><span>&#127819;</span> ඇඹුල්</div><div class="fc"><span>&#129371;</span> හාල්-කිරි</div>
     </div>
   </div>
 
@@ -420,6 +420,75 @@ runCd();setInterval(runCd,1000);
 // Scroll reveal
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}}),{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+<!-- === DYNAMIC ADMIN UPDATES SCRIPT === -->
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const [site, theme, popup, games, lb, ann, nakath, social] = await Promise.all([
+      fetch('/api/site').then(r => r.json()),
+      fetch('/api/theme').then(r => r.json()),
+      fetch('/api/popup').then(r => r.json()),
+      fetch('/api/games').then(r => r.json()),
+      fetch('/api/leaderboard?limit=8').then(r => r.json()),
+      fetch('/api/announcements').then(r => r.json()),
+      fetch('/api/nakath').then(r => r.json()),
+      fetch('/api/social').then(r => r.json())
+    ]);
+
+    // Theme colors
+    const r = document.documentElement.style;
+    if(theme.gold) r.setProperty('--gold', theme.gold);
+    if(theme.goldLt) r.setProperty('--gold-lt', theme.goldLt);
+    if(theme.maroon) r.setProperty('--maroon', theme.maroon);
+    if(theme.cream) r.setProperty('--cream', theme.cream);
+
+    // Games Grid (dynamic)
+    const grid = document.getElementById('gamesGrid');
+    if(grid && games.length) {
+      grid.innerHTML = games.map(g => {
+        const key = g.id || g.gameId;
+        return `
+        <div class="gcard">
+          <div class="gcard-img ${BG_MAP[g.type]||'tb-soon'}">
+            <span class="gcard-icon">${g.icon}</span>
+            ${g.badge ? `<span class="gcard-badge ${g.badge==='HOT'?'badge-hot':'badge-new'}">${g.badge}</span>` : ''}
+            <span class="gcard-plays" id="plays-${key}">${g.plays||0} plays</span>
+          </div>
+          <div class="gcard-body">
+            <span class="gcard-tag">${g.type}</span>
+            <h3 class="gcard-title">${g.name}</h3>
+            <p class="gcard-desc">${g.desc}</p>
+            <div class="gcard-foot">
+              <span class="gcard-meta">${g.players}</span>
+              <button class="gcard-btn" onclick="launchGame('${key}')">▶ Play</button>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // Leaderboard
+    const lbBody = document.getElementById('lbBody');
+    if(lbBody) lbBody.innerHTML = lb.map((item,i) => `
+      <div class="lb-row">
+        <span class="lb-rank">${i+1}</span>
+        <div class="lb-player"><div class="lb-avatar">${item.avatar}</div><div><div class="lb-pname">${item.name}</div></div></div>
+        <span>${item.gameLabel}</span>
+        <span class="lb-score">${item.score}</span>
+      </div>`).join('');
+
+    // Ticker / Announcements
+    const ticker = document.getElementById('tickerInner');
+    if(ticker && ann.length) {
+      ticker.innerHTML = ann.map(a => `<span class="ticker-item"><span class="ticker-tag">${a.tag}</span>${a.text}</span>`).join('');
+    }
+
+    console.log('✅ Dynamic updates loaded from Admin!');
+  } catch(e) {
+    console.log('Offline mode - using static content');
+  }
+});
 </script>
 </body>
 </html>
